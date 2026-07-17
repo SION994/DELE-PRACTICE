@@ -398,6 +398,69 @@
   }
   .master-save-btn:disabled{opacity:.4;cursor:default;}
 
+  /* listening tab */
+  .listen-controls-row{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 4px;align-items:center;}
+  .listen-controls-row label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;}
+  .listen-controls-row select{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:6px 8px;
+    border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);
+  }
+  .listen-playbar{display:flex;gap:8px;margin:2px 0 20px;}
+  .listen-para{display:flex;gap:12px;align-items:flex-start;margin-bottom:18px;}
+  .listen-para-btn{
+    flex:0 0 auto;width:32px;height:32px;border-radius:50%;margin-top:2px;
+    border:1.5px solid var(--brick);background:var(--card);color:var(--brick);
+    cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;
+  }
+  .listen-para-btn.playing{background:var(--brick);color:#fff;}
+  .listen-para p{margin:0;font-size:16px;line-height:1.85;transition:background .2s;}
+  .listen-para.active p{background:linear-gradient(transparent 68%, #CFE0F5 68%);}
+
+  .speak-btn{
+    border:1px solid var(--line);background:var(--card);color:var(--brick);
+    width:26px;height:26px;flex:0 0 26px;border-radius:50%;font-size:11px;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;margin-left:6px;
+  }
+  .speak-btn:hover{background:var(--paper-deep);}
+  .speak-btn.playing{background:var(--brick);color:#fff;}
+
+  /* today's tasks */
+  .today-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;}
+  .today-heading{font-family:'Fraunces',serif;font-size:26px;font-weight:700;margin:0;line-height:1.2;}
+  .today-daycount{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);
+    text-align:right;white-space:nowrap;padding-top:4px;
+  }
+  .today-daycount b{display:block;font-family:'Fraunces',serif;font-size:22px;color:var(--brick);font-weight:700;}
+  .today-phase-pill{
+    display:inline-block;margin-top:10px;
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;
+    background:var(--paper-deep);color:var(--brick-deep);
+    padding:4px 12px;border-radius:20px;
+  }
+  .today-checklist{margin-top:18px;display:flex;flex-direction:column;gap:10px;}
+  .today-task{
+    display:flex;align-items:flex-start;gap:12px;
+    border:1px solid var(--line);border-radius:8px;
+    padding:12px 14px;background:var(--paper);
+  }
+  .today-task.done{opacity:.5;}
+  .today-task.done .today-task-text{text-decoration:line-through;}
+  .today-check{
+    width:22px;height:22px;flex:0 0 22px;margin-top:1px;
+    border:1.5px solid var(--ink-soft);border-radius:5px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;background:var(--card);
+  }
+  .today-check.done{background:var(--teal);border-color:var(--teal);}
+  .today-task-text{flex:1;font-size:15px;line-height:1.5;}
+  .today-task-goto{
+    flex:0 0 auto;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    border:1px solid var(--brick);color:var(--brick);background:var(--card);
+    padding:5px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;
+  }
+  .today-task-goto:hover{background:var(--brick);color:#fff;}
+  .today-recap{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);font-size:13px;color:var(--ink-soft);line-height:1.7;}
+
   .hint{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-top:2px;}
   footer.note{margin-top:26px;font-size:11.5px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;text-align:center;}
 
@@ -407,6 +470,13 @@
     .article-body p{font-size:15px;}
   }
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#152B4E">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="DELE C1">
 </head>
 <body>
 <div class="wrap">
@@ -427,16 +497,34 @@
   </header>
 
   <nav class="tabs">
-    <button class="tab-btn active" data-tab="schedule"><span>📅</span>학습 일정</button>
+    <button class="tab-btn active" data-tab="today"><span>✅</span>오늘 할 일</button>
+    <button class="tab-btn" data-tab="schedule"><span>📅</span>학습 일정</button>
     <button class="tab-btn" data-tab="vocab"><span>🗂</span>오늘의 어휘</button>
     <button class="tab-btn" data-tab="news"><span>📰</span>뉴스 읽기</button>
     <button class="tab-btn" data-tab="notebook"><span>📓</span>단어장</button>
     <button class="tab-btn" data-tab="quiz"><span>✏️</span>퀴즈</button>
     <button class="tab-btn" data-tab="master"><span>📚</span>1000 어휘</button>
+    <button class="tab-btn" data-tab="listening"><span>🎧</span>듣기 연습</button>
   </nav>
 
+  <!-- TODAY'S TASKS -->
+  <section class="panel active" id="panel-today">
+    <div class="card">
+      <div class="today-head">
+        <div>
+          <p class="brand-eyebrow" id="today-date-label" style="margin-bottom:2px;">오늘</p>
+          <h2 class="today-heading" id="today-heading">할 일을 불러오는 중…</h2>
+        </div>
+        <div class="today-daycount" id="today-daycount"></div>
+      </div>
+      <div class="today-phase-pill" id="today-phase-pill"></div>
+      <div class="today-checklist" id="today-checklist"></div>
+      <div class="today-recap" id="today-recap"></div>
+    </div>
+  </section>
+
   <!-- SCHEDULE -->
-  <section class="panel active" id="panel-schedule">
+  <section class="panel" id="panel-schedule">
     <div class="card">
       <div class="settings-row">
         <span>학습 시작일:</span>
@@ -480,7 +568,7 @@
       <div class="article-meta" id="article-meta"></div>
       <div class="article-body" id="article-body"></div>
       <div class="lookup-panel" id="lookup-panel">
-        <span class="lookup-word" id="lookup-word"></span><span class="lookup-pos" id="lookup-pos"></span>
+        <span class="lookup-word" id="lookup-word"></span><span class="lookup-pos" id="lookup-pos"></span><button class="speak-btn" id="lookup-speak" style="border-color:#3A4A66;color:#8FC1E8;">🔊</button>
         <div class="lookup-ko" id="lookup-ko"></div>
         <div class="lookup-actions">
           <button class="btn on-dark primary" id="lookup-save">+ 내 단어장에 저장</button>
@@ -561,6 +649,38 @@
       <div class="master-cat-grid" id="master-cat-grid"></div>
       <div class="master-count-label" id="master-count-label"></div>
       <div class="master-list" id="master-list"></div>
+    </div>
+  </section>
+
+  <!-- LISTENING -->
+  <section class="panel" id="panel-listening">
+    <div class="card">
+      <h2 style="font-family:'Fraunces',serif;font-size:22px;margin:0 0 4px;">듣기 연습 (Comprensión auditiva)</h2>
+      <p class="hint">브라우저에 내장된 음성 합성 기능으로 뉴스 지문을 스페인어로 읽어줘요 (인터넷 연결 없이도 대부분 작동해요). 목소리 품질과 종류는 쓰시는 기기·브라우저에 따라 달라질 수 있어요 — 크롬을 추천드려요.</p>
+      <div class="listen-controls-row">
+        <label>속도:
+          <select id="listen-speed">
+            <option value="0.75">0.75×</option>
+            <option value="0.9" selected>0.9×</option>
+            <option value="1">1.0×</option>
+            <option value="1.15">1.15×</option>
+          </select>
+        </label>
+        <label>목소리:
+          <select id="listen-voice"></select>
+        </label>
+      </div>
+      <div class="article-picker" id="listen-picker"></div>
+    </div>
+    <div class="clipping-card">
+      <div class="clipping-tape"></div>
+      <div class="article-title" id="listen-title"></div>
+      <div class="article-meta" id="listen-meta"></div>
+      <div class="listen-playbar">
+        <button class="btn primary" id="listen-play-all">▶ 전체 재생</button>
+        <button class="btn" id="listen-stop">■ 정지</button>
+      </div>
+      <div id="listen-body"></div>
     </div>
   </section>
 
@@ -1890,7 +2010,8 @@ let state = {
   startDate: null,
   vocabChecked: {},   // "week-word" -> true
   notebook: [],       // {es, ko, source, addedAt}
-  quizStats: {}       // sourceKey -> {attempts, correct}
+  quizStats: {},      // sourceKey -> {attempts, correct}
+  todayChecked: {}    // "YYYY-MM-DD-idx" -> true
 };
 let currentArticleId = articles[0].id;
 let currentLookup = null; // {es, ko, source}
@@ -1912,6 +2033,13 @@ async function loadState(){
     const q = await window.storage.get('quiz-stats');
     if(q && q.value) state.quizStats = JSON.parse(q.value);
   }catch(e){}
+  try{
+    const t = await window.storage.get('today-checked');
+    if(t && t.value) state.todayChecked = JSON.parse(t.value);
+  }catch(e){}
+}
+async function saveTodayChecked(){
+  try{ await window.storage.set('today-checked', JSON.stringify(state.todayChecked)); }catch(e){}
 }
 async function saveQuizStats(){
   try{ await window.storage.set('quiz-stats', JSON.stringify(state.quizStats)); }catch(e){}
@@ -1935,6 +2063,9 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab !== 'listening' && typeof window.speechSynthesis !== 'undefined'){
+      window.speechSynthesis.cancel();
+    }
     if(btn.dataset.tab === 'quiz' && document.getElementById('quiz-setup-view').style.display !== 'none'){
       renderQuizSourceGrid();
       renderQuizStatsStrip();
@@ -1956,6 +2087,21 @@ function computeCurrentWeek(){
   if(diffDays < 0) return 0;
   const week = Math.floor(diffDays/7)+1;
   return Math.min(week, 12);
+}
+
+function computeDiffDaysRaw(){
+  if(!state.startDate) return 0;
+  const start = new Date(state.startDate + 'T00:00:00');
+  const now = new Date();
+  return Math.floor((now - start)/(1000*60*60*24));
+}
+
+function findWeekData(weekNum){
+  for(const phaseObj of schedule){
+    const found = phaseObj.weeks.find(w=>w.w===weekNum);
+    if(found) return {...found, phase: phaseObj.phase, theme: (vocabBank[weekNum]||vocabBank[1]).theme};
+  }
+  return null;
 }
 
 function renderWeekBadge(){
@@ -1994,6 +2140,7 @@ document.getElementById('start-date-input').addEventListener('change', async (e)
   renderWeekBadge();
   renderSchedule();
   renderVocab();
+  renderToday();
 });
 
 /* ---------------------------------------------------------
@@ -2020,8 +2167,8 @@ function renderVocab(){
     li.className = 'vocab-item'+(isDone?' done':'');
     li.innerHTML = `
       <div class="vocab-check${isDone?' done':''}" data-key="${key}">${isDone?'✓':''}</div>
-      <div>
-        <span class="vocab-word">${es}</span><span class="vocab-pos">${pos}</span>
+      <div style="flex:1;">
+        <span class="vocab-word">${es}</span><span class="vocab-pos">${pos}</span><button class="speak-btn" data-word="${es.replace(/"/g,'&quot;')}">🔊</button>
         <div class="vocab-ko">${ko}</div>
         <div class="vocab-ex">${ex}</div>
       </div>`;
@@ -2036,6 +2183,9 @@ function renderVocab(){
       await saveVocabChecked();
       renderVocab();
     });
+  });
+  list.querySelectorAll('.speak-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{ e.stopPropagation(); speakWord(btn.dataset.word, btn); });
   });
 }
 
@@ -2091,6 +2241,9 @@ function openLookup(es, ko, source){
   document.getElementById('lookup-save').disabled = already;
   document.getElementById('lookup-save').textContent = already ? '이미 저장됨' : '+ 내 단어장에 저장';
 }
+document.getElementById('lookup-speak').addEventListener('click', (e)=>{
+  if(currentLookup) speakWord(currentLookup.es, e.currentTarget);
+});
 function closeLookup(){
   document.getElementById('lookup-panel').classList.remove('show');
   currentLookup = null;
@@ -2414,10 +2567,11 @@ function renderMasterList(){
     row.className='master-row';
     row.innerHTML = `
       <div>
-        <div class="master-row-word">${item.es}</div>
+        <div class="master-row-word">${item.es}<button class="speak-btn" data-word="${item.es.replace(/"/g,'&quot;')}">🔊</button></div>
         <div class="master-row-ko">${item.ko}</div>
       </div>
       <button class="master-save-btn" ${already?'disabled':''}>${already?'저장됨':'+ 단어장'}</button>`;
+    row.querySelector('.speak-btn').addEventListener('click', (e)=>{ e.stopPropagation(); speakWord(item.es, e.currentTarget); });
     row.querySelector('.master-save-btn').addEventListener('click', async (e)=>{
       state.notebook.unshift({es:item.es, ko:item.ko, source:`마스터 사전 · ${item.cat}`, addedAt: new Date().toISOString().slice(0,10)});
       await saveNotebook();
@@ -2435,6 +2589,250 @@ document.getElementById('master-search').addEventListener('input', (e)=>{
 });
 
 /* ---------------------------------------------------------
+   TEXT-TO-SPEECH (Web Speech API)
+--------------------------------------------------------- */
+const hasTTS = typeof window.speechSynthesis !== 'undefined';
+let synthVoices = [];
+function stripMarkdown(text){
+  return text.replace(/\*\*(.+?)\*\*/g, '$1');
+}
+function loadVoices(){
+  if(!hasTTS) return;
+  synthVoices = window.speechSynthesis.getVoices();
+  populateVoiceSelect();
+}
+if(hasTTS){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+function spanishVoices(){
+  return synthVoices.filter(v=> v.lang && v.lang.toLowerCase().startsWith('es'));
+}
+function populateVoiceSelect(){
+  const sel = document.getElementById('listen-voice');
+  if(!sel) return;
+  const esVoices = spanishVoices();
+  const prevValue = sel.value;
+  sel.innerHTML='';
+  if(esVoices.length===0){
+    const opt = document.createElement('option');
+    opt.value=''; opt.textContent='스페인어 음성 없음 (기본값 사용)';
+    sel.appendChild(opt);
+    return;
+  }
+  esVoices.forEach(v=>{
+    const opt = document.createElement('option');
+    opt.value = v.voiceURI;
+    opt.textContent = `${v.name} (${v.lang})`;
+    sel.appendChild(opt);
+  });
+  if(prevValue && esVoices.some(v=>v.voiceURI===prevValue)) sel.value = prevValue;
+}
+function pickVoice(preferredURI){
+  if(preferredURI){
+    const v = synthVoices.find(v=>v.voiceURI===preferredURI);
+    if(v) return v;
+  }
+  const es = spanishVoices();
+  return es.length ? es[0] : null;
+}
+function speakWord(text, btnEl){
+  if(!hasTTS){ alert('이 브라우저는 음성 합성을 지원하지 않아요. 최신 크롬을 추천드려요.'); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(stripMarkdown(text));
+  const v = pickVoice(null);
+  if(v) u.voice = v;
+  u.lang = v ? v.lang : 'es-ES';
+  u.rate = 0.92;
+  if(btnEl){
+    btnEl.classList.add('playing');
+    u.onend = ()=>btnEl.classList.remove('playing');
+    u.onerror = ()=>btnEl.classList.remove('playing');
+  }
+  window.speechSynthesis.speak(u);
+}
+
+/* ---------------------------------------------------------
+   LISTENING TAB
+--------------------------------------------------------- */
+let currentListenId = articles[0].id;
+
+function renderListenPicker(){
+  const picker = document.getElementById('listen-picker');
+  picker.innerHTML='';
+  articles.forEach(a=>{
+    const chip = document.createElement('button');
+    chip.className='article-chip'+(a.id===currentListenId?' active':'');
+    chip.textContent = a.topic;
+    chip.addEventListener('click', ()=>{
+      stopListening();
+      currentListenId=a.id;
+      renderListenPicker();
+      renderListenArticle();
+    });
+    picker.appendChild(chip);
+  });
+}
+
+function renderListenArticle(){
+  const art = articles.find(a=>a.id===currentListenId);
+  document.getElementById('listen-title').textContent = art.title;
+  document.getElementById('listen-meta').textContent = art.meta;
+  const body = document.getElementById('listen-body');
+  body.innerHTML='';
+  art.paras.forEach((p, idx)=>{
+    const escaped = escapeHtml(p).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    const row = document.createElement('div');
+    row.className='listen-para';
+    row.dataset.idx = idx;
+    row.innerHTML = `<button class="listen-para-btn" data-idx="${idx}">▶</button><p>${escaped}</p>`;
+    row.querySelector('.listen-para-btn').addEventListener('click', ()=>playParagraph(idx, false));
+    body.appendChild(row);
+  });
+}
+
+function stopListening(){
+  if(hasTTS) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-para').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.listen-para-btn').forEach(b=>{b.classList.remove('playing'); b.textContent='▶';});
+}
+
+function playParagraph(idx, chainNext){
+  if(!hasTTS){ alert('이 브라우저는 음성 합성을 지원하지 않아요. 최신 크롬을 추천드려요.'); return; }
+  const art = articles.find(a=>a.id===currentListenId);
+  if(!art || idx >= art.paras.length) return;
+  window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-para').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.listen-para-btn').forEach(b=>{b.classList.remove('playing'); b.textContent='▶';});
+  const row = document.querySelector(`.listen-para[data-idx="${idx}"]`);
+  if(row){
+    row.classList.add('active');
+    const btn = row.querySelector('.listen-para-btn');
+    btn.classList.add('playing'); btn.textContent='■';
+    row.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  const text = stripMarkdown(art.paras[idx]);
+  const u = new SpeechSynthesisUtterance(text);
+  const voiceSel = document.getElementById('listen-voice');
+  const v = pickVoice(voiceSel ? voiceSel.value : null);
+  if(v) u.voice = v;
+  u.lang = v ? v.lang : 'es-ES';
+  const speedSel = document.getElementById('listen-speed');
+  u.rate = speedSel ? parseFloat(speedSel.value) : 0.9;
+  u.onend = ()=>{
+    if(row){ row.classList.remove('active'); const b=row.querySelector('.listen-para-btn'); b.classList.remove('playing'); b.textContent='▶'; }
+    if(chainNext && idx < art.paras.length-1) playParagraph(idx+1, true);
+  };
+  u.onerror = ()=>{
+    if(row){ row.classList.remove('active'); const b=row.querySelector('.listen-para-btn'); b.classList.remove('playing'); b.textContent='▶'; }
+  };
+  window.speechSynthesis.speak(u);
+}
+
+document.getElementById('listen-play-all').addEventListener('click', ()=> playParagraph(0, true));
+document.getElementById('listen-stop').addEventListener('click', stopListening);
+
+/* ---------------------------------------------------------
+   TODAY'S TASKS (날짜에 따라 자동으로 바뀌는 하루 체크리스트)
+--------------------------------------------------------- */
+function switchToTab(tabName){
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+  if(btn) btn.click();
+}
+
+const dailyTemplates = [
+  (wd)=>[
+    {text:`이번 주 새 어휘 학습: "${wd.theme}" 중 4~5개 외우기`, tab:'vocab'},
+    {text:'뉴스 지문 1편 읽고 모르는 단어 저장하기', tab:'news'},
+    {text:`이번 주 목표 확인하기: ${wd.focus}`, tab:'schedule'},
+  ],
+  (wd)=>[
+    {text:'어제 배운 단어 복습 + 새 단어 4~5개 추가', tab:'vocab'},
+    {text:'어제 읽은 뉴스 지문, 듣기 탭에서 들어보기', tab:'listening'},
+    {text:'짧은 퀴즈 5문제 (이번 주 어휘)', tab:'quiz'},
+  ],
+  (wd)=>[
+    {text:`이번 주 핵심 훈련 시작: ${wd.routine}`, tab:'schedule'},
+    {text:'1000 어휘 사전에서 관련 분야 훑어보기', tab:'master'},
+    {text:'뉴스 지문 1편 더 읽고 모르는 단어 저장하기', tab:'news'},
+  ],
+  (wd)=>[
+    {text:'이번 주 남은 어휘 전부 학습 완료하기', tab:'vocab'},
+    {text:'새 뉴스 지문 골라 듣기 탭에서 연습하기', tab:'listening'},
+    {text:'퀴즈 10문제 (이번 주 어휘)', tab:'quiz'},
+  ],
+  (wd)=>[
+    {text:`이번 주 훈련 이어가기: ${wd.routine}`, tab:'schedule'},
+    {text:'단어장에 저장한 단어들 훑어보기', tab:'notebook'},
+    {text:'퀴즈 10문제 (오늘 뉴스 어휘)', tab:'quiz'},
+  ],
+  (wd, nd)=>[
+    {text:'주간 총정리 퀴즈 15문제 (12주 전체 어휘)', tab:'quiz'},
+    {text:`이번 주 자가 점검: "${wd.tag}" 영역이 부족하지 않았는지 확인`, tab:'schedule'},
+    {text: nd ? `다음 주 예고 확인: ${nd.focus}` : '다음 주는 없어요 — 시험 리허설 마무리 단계예요', tab:'schedule'},
+  ],
+  (wd)=>[
+    {text:'휴식일 — 가볍게 뉴스 1편만 듣기', tab:'listening'},
+    {text:'단어장 전체를 가볍게 훑어보기', tab:'notebook'},
+    {text:'무리하지 말고 푹 쉬기 (내일부터 다음 주 시작!)', tab:'today'},
+  ],
+];
+
+function getTodayPlan(){
+  const diffDaysRaw = computeDiffDaysRaw();
+  const clampedDay = Math.max(diffDaysRaw, 0);
+  const weekNum = Math.min(Math.floor(clampedDay/7)+1, 12);
+  const dayInWeek = clampedDay % 7;
+  const wd = findWeekData(weekNum);
+  const nd = weekNum < 12 ? findWeekData(weekNum+1) : null;
+  const template = dailyTemplates[dayInWeek](wd, nd);
+  return {diffDaysRaw, weekNum, dayInWeek, wd, nd, tasks: template};
+}
+
+function todayDateKey(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function renderToday(){
+  const plan = getTodayPlan();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric', weekday:'long'});
+  document.getElementById('today-date-label').textContent = dateStr;
+  document.getElementById('today-heading').textContent = plan.diffDaysRaw < 0
+    ? '학습 시작 전이에요'
+    : `${plan.dayInWeek+1}일차 할 일`;
+  document.getElementById('today-daycount').innerHTML = plan.diffDaysRaw < 0
+    ? `시작까지<br><b>D-${Math.abs(plan.diffDaysRaw)}</b>`
+    : `전체 진행<br><b>${Math.min(plan.diffDaysRaw+1,84)} / 84일</b>`;
+  document.getElementById('today-phase-pill').textContent = plan.wd ? `${plan.wd.phase} · ${plan.weekNum}주차` : '';
+
+  const dateKey = todayDateKey();
+  const listDiv = document.getElementById('today-checklist');
+  listDiv.innerHTML='';
+  plan.tasks.forEach((task, idx)=>{
+    const key = `${dateKey}-${idx}`;
+    const isDone = !!state.todayChecked[key];
+    const row = document.createElement('div');
+    row.className = 'today-task'+(isDone?' done':'');
+    row.innerHTML = `
+      <div class="today-check${isDone?' done':''}" data-key="${key}">${isDone?'✓':''}</div>
+      <div class="today-task-text">${task.text}</div>
+      <button class="today-task-goto" data-tab="${task.tab}">바로가기 →</button>`;
+    row.querySelector('.today-check').addEventListener('click', async ()=>{
+      state.todayChecked[key] = !state.todayChecked[key];
+      await saveTodayChecked();
+      renderToday();
+    });
+    row.querySelector('.today-task-goto').addEventListener('click', ()=> switchToTab(task.tab));
+    listDiv.appendChild(row);
+  });
+
+  document.getElementById('today-recap').textContent = plan.wd
+    ? `이번 주(${plan.weekNum}주차) 전체 루틴: ${plan.wd.routine}`
+    : '';
+}
+
+/* ---------------------------------------------------------
    INIT
 --------------------------------------------------------- */
 (async function init(){
@@ -2445,6 +2843,7 @@ document.getElementById('master-search').addEventListener('input', (e)=>{
   }
   document.getElementById('start-date-input').value = state.startDate;
   renderWeekBadge();
+  renderToday();
   renderSchedule();
   renderVocab();
   renderArticlePicker();
@@ -2455,7 +2854,17 @@ document.getElementById('master-search').addEventListener('input', (e)=>{
   showQuizView('setup');
   renderMasterCatGrid();
   renderMasterList();
+  populateVoiceSelect();
+  renderListenPicker();
+  renderListenArticle();
 })();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>
