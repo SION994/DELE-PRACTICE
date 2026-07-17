@@ -1,0 +1,2400 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELE C1 스튜디오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFE6D3;
+    --paper-deep:#E4D8BE;
+    --ink:#232017;
+    --ink-soft:#5B5647;
+    --brick:#B04A2F;
+    --brick-deep:#8C3A24;
+    --teal:#33594E;
+    --teal-soft:#B9CCC3;
+    --line:#C9BC9C;
+    --card:#FBF7EC;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Serif 4', serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+
+  header.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:16px;
+    margin-bottom:22px;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .brand-eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--brick-deep);
+    margin:0 0 4px;
+  }
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:700;
+    font-size:34px;
+    margin:0;
+    line-height:1.05;
+  }
+  .subtitle{font-size:14px;color:var(--ink-soft);margin-top:6px;max-width:480px;}
+  .day-badge{
+    text-align:right;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .day-badge b{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-size:28px;
+    color:var(--brick);
+    font-weight:600;
+  }
+
+  nav.tabs{
+    display:flex;
+    gap:2px;
+    margin-bottom:22px;
+    border:1.5px solid var(--ink);
+    border-radius:10px;
+    overflow:hidden;
+    background:var(--ink);
+  }
+  nav.tabs button{
+    flex:1;
+    padding:12px 8px;
+    border:none;
+    background:var(--paper-deep);
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.02em;
+    cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  nav.tabs button.active{
+    background:var(--card);
+    color:var(--brick-deep);
+    font-weight:600;
+  }
+  nav.tabs button:hover:not(.active){background:#e9dfc4;}
+
+  section.panel{display:none;}
+  section.panel.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:14px;
+  }
+  .phase-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin:26px 0 10px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .phase-label:first-child{margin-top:0;}
+  .phase-label::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  .week-row{
+    display:grid;
+    grid-template-columns:56px 1fr;
+    gap:14px;
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:8px;
+  }
+  .week-num{
+    font-family:'Fraunces', serif;
+    font-size:26px;
+    font-weight:600;
+    color:var(--brick);
+    line-height:1;
+    align-self:center;
+    text-align:center;
+  }
+  .week-num span{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--ink-soft);margin-top:2px;letter-spacing:.08em;}
+  .week-focus{font-weight:600;font-size:15px;margin:0 0 3px;}
+  .week-routine{font-size:13px;color:var(--ink-soft);margin:0 0 4px;line-height:1.5;}
+  .week-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    background:var(--teal-soft);
+    color:var(--teal);
+    padding:2px 8px;
+    border-radius:20px;
+    margin-top:4px;
+  }
+  .week-row.current{border-color:var(--brick);box-shadow:0 0 0 1.5px var(--brick) inset;}
+
+  /* settings row */
+  .settings-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);}
+  .settings-row input[type=date]{
+    font-family:'IBM Plex Mono',monospace;
+    border:1px solid var(--line);
+    background:var(--paper);
+    padding:6px 8px;
+    border-radius:6px;
+    font-size:13px;
+    color:var(--ink);
+  }
+
+  /* vocab tab */
+  .vocab-header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+  .vocab-header h2{font-family:'Fraunces',serif;font-size:22px;margin:0;}
+  .vocab-progress{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--teal);}
+  .vocab-list{list-style:none;padding:0;margin:14px 0 0;}
+  .vocab-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:10px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .vocab-item:last-child{border-bottom:none;}
+  .vocab-check{
+    width:20px;height:20px;flex:0 0 20px;
+    border:1.5px solid var(--ink-soft);
+    border-radius:5px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;color:var(--card);
+    background:var(--card);
+    margin-top:2px;
+  }
+  .vocab-check.done{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .vocab-word{font-weight:600;font-size:15.5px;}
+  .vocab-pos{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink-soft);margin-left:6px;}
+  .vocab-ko{color:var(--brick-deep);font-size:14px;margin-top:1px;}
+  .vocab-ex{font-size:12.5px;color:var(--ink-soft);font-style:italic;margin-top:2px;}
+  .vocab-item.done .vocab-word, .vocab-item.done .vocab-ko{opacity:.45;}
+
+  /* news tab */
+  .article-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap;}
+  .article-picker{display:flex;gap:6px;flex-wrap:wrap;}
+  .article-chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    padding:6px 10px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--paper-deep);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .article-chip.active{background:var(--brick);color:#fff;border-color:var(--brick);}
+  .article-title{font-family:'Fraunces',serif;font-size:24px;font-weight:600;margin:6px 0 2px;}
+  .article-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);margin-bottom:14px;}
+  .article-body p{font-size:16px;line-height:1.85;margin:0 0 16px;}
+  .vw{
+    background:linear-gradient(transparent 60%, #f0d2b8 60%);
+    cursor:pointer;
+    font-weight:600;
+    border-bottom:1.5px dotted var(--brick);
+    padding-bottom:1px;
+  }
+  .vw:hover{background:linear-gradient(transparent 55%, #e8b98c 55%);}
+
+  .lookup-panel{
+    position:sticky;
+    bottom:14px;
+    margin-top:16px;
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:12px;
+    padding:16px 18px;
+    display:none;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);
+  }
+  .lookup-panel.show{display:block;animation:fade .2s ease;}
+  .lookup-word{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#fff;}
+  .lookup-pos{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#c9bfa3;margin-left:8px;}
+  .lookup-ko{color:#F0C4A2;font-size:16px;margin:6px 0 12px;}
+  .lookup-actions{display:flex;gap:8px;}
+  .btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    padding:8px 14px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    background:var(--paper-deep);
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .btn.primary{background:var(--brick);color:#fff;border-color:var(--brick);}
+  .btn.on-dark{background:transparent;border-color:#54503f;color:var(--paper);}
+  .btn.on-dark.primary{background:#F0C4A2;color:var(--ink);border-color:#F0C4A2;}
+  .btn:disabled{opacity:.5;cursor:default;}
+
+  /* notebook */
+  .nb-toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .nb-toolbar input{
+    flex:1;min-width:160px;
+    font-family:'Source Serif 4',serif;
+    font-size:13px;
+    padding:8px 12px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    color:var(--ink);
+  }
+  .nb-add-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+  .nb-add-row input{flex:1;min-width:110px;font-family:'Source Serif 4',serif;font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:var(--card);}
+  .nb-table{width:100%;border-collapse:collapse;}
+  .nb-table th{
+    text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10px;
+    text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);
+    border-bottom:1.5px solid var(--ink);padding:6px 8px;
+  }
+  .nb-table td{padding:9px 8px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top;}
+  .nb-src{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--teal);}
+  .nb-del{cursor:pointer;color:var(--brick);font-family:'IBM Plex Mono',monospace;font-size:11px;background:none;border:none;}
+  .nb-empty{padding:30px 10px;text-align:center;color:var(--ink-soft);font-size:14px;}
+
+  /* quiz */
+  .quiz-source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0 18px;}
+  .quiz-source-btn{
+    text-align:left;
+    padding:14px 14px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    background:var(--card);
+    cursor:pointer;
+    font-family:'Source Serif 4', serif;
+  }
+  .quiz-source-btn:hover{border-color:var(--brick);}
+  .quiz-source-btn b{display:block;font-size:14.5px;margin-bottom:3px;}
+  .quiz-source-btn span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-soft);}
+  .quiz-count-row{display:flex;gap:10px;align-items:center;margin-bottom:6px;flex-wrap:wrap;}
+  .quiz-count-row select{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);
+  }
+  .quiz-stats-strip{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);}
+  .quiz-stats-strip div{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);}
+  .quiz-stats-strip b{display:block;font-family:'Fraunces',serif;font-size:20px;color:var(--teal);font-weight:600;}
+  .quiz-progress{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+  .quiz-question{font-family:'Fraunces',serif;font-size:27px;font-weight:600;margin:4px 0 20px;}
+  .quiz-options{display:grid;gap:10px;}
+  .quiz-opt{
+    padding:13px 16px;border:1.5px solid var(--line);border-radius:9px;
+    background:var(--card);text-align:left;font-size:15px;cursor:pointer;
+    font-family:'Source Serif 4',serif;color:var(--ink);
+  }
+  .quiz-opt:hover:not(.disabled){border-color:var(--brick);}
+  .quiz-opt.correct{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .quiz-opt.wrong{background:var(--brick);color:#fff;border-color:var(--brick);}
+  .quiz-opt.disabled{cursor:default;}
+  .quiz-next-row{display:flex;justify-content:space-between;align-items:center;margin-top:18px;}
+  .quiz-result-score{font-family:'Fraunces',serif;font-size:44px;color:var(--brick);font-weight:700;line-height:1;}
+  .quiz-result-sub{font-size:14px;color:var(--ink-soft);margin:4px 0 18px;}
+  .quiz-missed-item{display:flex;justify-content:space-between;padding:8px 4px;border-bottom:1px solid var(--line);font-size:14px;}
+  .quiz-missed-item b{color:var(--brick-deep);}
+  .quiz-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+  .quiz-back-link{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);cursor:pointer;background:none;border:none;text-decoration:underline;padding:0;}
+
+  /* master dictionary */
+  .master-toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+  .master-toolbar input{
+    flex:1;min-width:160px;font-family:'Source Serif 4',serif;font-size:13px;
+    padding:8px 12px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink);
+  }
+  .master-cat-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+  .master-cat-chip{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;padding:6px 10px;border-radius:20px;
+    border:1px solid var(--line);background:var(--paper-deep);color:var(--ink-soft);cursor:pointer;
+  }
+  .master-cat-chip.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .master-count-label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);margin-bottom:10px;}
+  .master-list{max-height:520px;overflow-y:auto;border-top:1px solid var(--line);}
+  .master-row{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:10px 4px;border-bottom:1px solid var(--line);
+  }
+  .master-row-word{font-weight:600;font-size:14.5px;}
+  .master-row-ko{color:var(--brick-deep);font-size:13.5px;margin-top:1px;}
+  .master-save-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:6px 10px;border-radius:6px;
+    border:1px solid var(--line);background:var(--card);color:var(--teal);cursor:pointer;white-space:nowrap;
+  }
+  .master-save-btn:disabled{opacity:.4;cursor:default;}
+
+  .hint{font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin-top:2px;}
+  footer.note{margin-top:26px;font-size:11.5px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;text-align:center;}
+
+  @media (max-width:560px){
+    h1.title{font-size:26px;}
+    .week-row{grid-template-columns:44px 1fr;}
+    .article-body p{font-size:15px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <p class="brand-eyebrow">Cuaderno de preparación · Instituto Cervantes</p>
+      <h1 class="title">DELE C1 스튜디오</h1>
+      <p class="subtitle">12주 학습 일정, 일일 어휘, 뉴스 읽기 연습, 나만의 단어장을 한곳에 모은 연습 공간입니다.</p>
+    </div>
+    <div class="day-badge">
+      <span id="week-label">시작일을 설정하세요 →</span>
+      <b id="week-number">W–</b>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="schedule">📅 학습 일정</button>
+    <button class="tab-btn" data-tab="vocab">🗂 오늘의 어휘</button>
+    <button class="tab-btn" data-tab="news">📰 뉴스 읽기 연습</button>
+    <button class="tab-btn" data-tab="notebook">📓 나의 단어장</button>
+    <button class="tab-btn" data-tab="quiz">✏️ 퀴즈</button>
+    <button class="tab-btn" data-tab="master">📚 1000 어휘 사전</button>
+  </nav>
+
+  <!-- SCHEDULE -->
+  <section class="panel active" id="panel-schedule">
+    <div class="card">
+      <div class="settings-row">
+        <span>학습 시작일:</span>
+        <input type="date" id="start-date-input">
+        <span class="hint" id="start-date-hint">시작일을 정하면 오늘이 몇 주차인지 자동으로 표시돼요.</span>
+      </div>
+    </div>
+    <div class="card">
+      <p class="hint">실제 DELE C1 시험은 <b>Comprensión de lectura</b>(90분·5과제·40문항, 25%), <b>Comprensión auditiva</b>(약 50분·5과제, 25%), <b>Expresión e interacción escritas</b>(2과제·80분, 25%), <b>Expresión e interacción orales</b>(3과제·약 20분+준비 20분, 25%) 네 영역으로 구성되고, 합격을 위해서는 [독해+작문] 그룹과 [듣기+말하기] 그룹에서 각각 60점 만점 중 30점 이상을 받아야 합니다. 아래 일정은 이 구조에 맞춰 짰습니다.</p>
+    </div>
+    <div id="schedule-list"></div>
+  </section>
+
+  <!-- VOCAB -->
+  <section class="panel" id="panel-vocab">
+    <div class="card">
+      <div class="vocab-header">
+        <h2 id="vocab-week-title">1주차 어휘</h2>
+        <span class="vocab-progress" id="vocab-progress-label">0 / 0 완료</span>
+      </div>
+      <p class="hint">권장 학습법: 하루 2~3단어씩 새로 외우고, 전날 단어는 <b>복습</b>으로 소리 내어 다시 읽어보세요. 체크박스를 누르면 진행 상황이 저장됩니다.</p>
+      <ul class="vocab-list" id="vocab-list"></ul>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="panel" id="panel-news">
+    <div class="card">
+      <p class="hint" style="margin-bottom:12px;"><b>2026년 7월 17일 기준</b> 경제·환경·기술·사회·보건·문화 여섯 분야의 실제 스페인어권 뉴스를 검색·분석하여, 핵심 내용을 C1 수준의 원문으로 재구성했습니다 (원 기사 문장을 그대로 옮기지 않고 사실관계만 반영해 새로 작성했습니다). <b>진하게 밑줄 표시된 단어를 클릭하면 한글 뜻이 아래에 뜹니다.</b> 다음에 다시 요청하시면 그날의 최신 뉴스로 다시 만들어 드릴게요.</p>
+      <div class="article-nav">
+        <div class="article-picker" id="article-picker"></div>
+      </div>
+      <div class="article-title" id="article-title"></div>
+      <div class="article-meta" id="article-meta"></div>
+      <div class="article-body" id="article-body"></div>
+      <div class="lookup-panel" id="lookup-panel">
+        <span class="lookup-word" id="lookup-word"></span><span class="lookup-pos" id="lookup-pos"></span>
+        <div class="lookup-ko" id="lookup-ko"></div>
+        <div class="lookup-actions">
+          <button class="btn on-dark primary" id="lookup-save">+ 내 단어장에 저장</button>
+          <button class="btn on-dark" id="lookup-close">닫기</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTEBOOK -->
+  <section class="panel" id="panel-notebook">
+    <div class="card">
+      <div class="nb-toolbar">
+        <input type="text" id="nb-search" placeholder="단어장에서 검색…">
+        <span class="vocab-progress" id="nb-count">0개 저장됨</span>
+      </div>
+      <p class="hint" style="margin-bottom:10px;">뉴스나 단어 목록에서 저장한 어휘가 이곳에 모입니다. 직접 단어를 추가할 수도 있어요.</p>
+      <div class="nb-add-row">
+        <input type="text" id="nb-new-es" placeholder="스페인어 단어">
+        <input type="text" id="nb-new-ko" placeholder="한글 뜻">
+        <button class="btn primary" id="nb-add-btn">추가</button>
+      </div>
+      <table class="nb-table">
+        <thead><tr><th style="width:26%">단어</th><th style="width:40%">뜻</th><th style="width:20%">출처</th><th style="width:14%"></th></tr></thead>
+        <tbody id="nb-body"></tbody>
+      </table>
+      <div class="nb-empty" id="nb-empty" style="display:none;">아직 저장된 단어가 없습니다. 뉴스 지문에서 어려운 단어를 클릭해 저장해보세요.</div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="panel" id="panel-quiz">
+    <div class="card" id="quiz-setup-view">
+      <h2 style="font-family:'Fraunces',serif;font-size:22px;margin:0 0 4px;">짧은 퀴즈로 확인하기</h2>
+      <p class="hint">범위를 골라 몇 문제든 반복해서 풀어보세요. 몇 번을 다시 풀어도 새로운 순서와 보기로 나옵니다.</p>
+      <div class="quiz-source-grid" id="quiz-source-grid"></div>
+      <div class="quiz-count-row">
+        <span class="hint" style="margin:0;">문항 수:</span>
+        <select id="quiz-count-select">
+          <option value="5">5문제</option>
+          <option value="10" selected>10문제</option>
+          <option value="15">15문제</option>
+        </select>
+        <button class="btn primary" id="quiz-start-btn">퀴즈 시작</button>
+      </div>
+      <div class="quiz-stats-strip" id="quiz-stats-strip"></div>
+    </div>
+
+    <div class="card" id="quiz-play-view" style="display:none;">
+      <div class="quiz-progress" id="quiz-progress"></div>
+      <div class="quiz-question" id="quiz-question"></div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div class="quiz-next-row">
+        <button class="quiz-back-link" id="quiz-quit-btn">범위 다시 선택</button>
+        <button class="btn primary" id="quiz-next-btn" style="display:none;">다음 문제 →</button>
+      </div>
+    </div>
+
+    <div class="card" id="quiz-result-view" style="display:none;">
+      <div class="quiz-result-score" id="quiz-result-score"></div>
+      <div class="quiz-result-sub" id="quiz-result-sub"></div>
+      <div id="quiz-missed-list"></div>
+      <div class="quiz-actions">
+        <button class="btn primary" id="quiz-retry-btn">같은 범위로 다시 풀기</button>
+        <button class="btn" id="quiz-newset-btn">다른 범위 고르기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MASTER DICTIONARY -->
+  <section class="panel" id="panel-master">
+    <div class="card">
+      <h2 style="font-family:'Fraunces',serif;font-size:22px;margin:0 0 4px;">1000 어휘 사전</h2>
+      <p class="hint">DELE C1 대비용 고빈도 어휘 1,000개를 10개 분야로 정리했어요. 분야를 고르거나 검색해서 훑어보고, 어려운 단어는 바로 단어장에 저장하세요.</p>
+      <div class="master-toolbar">
+        <input type="text" id="master-search" placeholder="스페인어 또는 한글 뜻으로 검색…">
+      </div>
+      <div class="master-cat-grid" id="master-cat-grid"></div>
+      <div class="master-count-label" id="master-count-label"></div>
+      <div class="master-list" id="master-list"></div>
+    </div>
+  </section>
+
+  <footer class="note">DELE C1 STUDIO · 진행 상황은 이 브라우저에 자동 저장됩니다</footer>
+</div>
+
+<script>
+/* ---------------------------------------------------------
+   STANDALONE STORAGE POLYFILL
+   이 파일을 claude.ai 밖(자체 도메인)에서 호스팅할 때 쓰는 버전입니다.
+   window.storage가 없으므로 브라우저의 localStorage로 동일한 기능을 구현합니다.
+--------------------------------------------------------- */
+(function(){
+  const PREFIX = 'dele_c1_studio__';
+  window.storage = {
+    async get(key){
+      try{
+        const raw = localStorage.getItem(PREFIX+key);
+        if(raw===null) return null;
+        return {key, value: raw, shared:false};
+      }catch(e){ return null; }
+    },
+    async set(key, value){
+      try{
+        localStorage.setItem(PREFIX+key, value);
+        return {key, value, shared:false};
+      }catch(e){ return null; }
+    },
+    async delete(key){
+      try{
+        localStorage.removeItem(PREFIX+key);
+        return {key, deleted:true, shared:false};
+      }catch(e){ return null; }
+    },
+    async list(prefix){
+      try{
+        const keys=[];
+        for(let i=0;i<localStorage.length;i++){
+          const k = localStorage.key(i);
+          if(k && k.startsWith(PREFIX)){
+            const shortKey = k.slice(PREFIX.length);
+            if(!prefix || shortKey.startsWith(prefix)) keys.push(shortKey);
+          }
+        }
+        return {keys, prefix, shared:false};
+      }catch(e){ return null; }
+    }
+  };
+})();
+</script>
+<script>
+/* ---------------------------------------------------------
+   DATA: 12-week schedule
+--------------------------------------------------------- */
+const schedule = [
+  {phase:"Fase 1 · 진단 & 기초 다지기 (1~3주)", weeks:[
+    {w:1, focus:"진단 평가 & 습관 만들기", routine:"C1 고빈도 어휘 800개 자가진단 → 공식 모의고사 1회 풀고 채점 → 매일 뉴스 1편 읽기 습관 시작", tag:"진단"},
+    {w:2, focus:"Comprensión de lectura Tarea 1–2", routine:"장문 독해(선택형)·문장 재배치 유형 전략 학습, 하루 지문 1편 + 문단 요약 연습", tag:"독해"},
+    {w:3, focus:"Comprensión de lectura Tarea 3–5 + 문법 심화", routine:"어휘고르기·빈칸채우기 유형, 접속법/조건문/관계사 복습, 오답 원인 분석 노트 시작", tag:"독해·문법"},
+  ]},
+  {phase:"Fase 2 · 듣기 집중 훈련 (4~6주)", weeks:[
+    {w:4, focus:"Comprensión auditiva Tarea 1–2", routine:"뉴스·인터뷰 듣기, 받아쓰기(dictado) 5분/일, 쉐도잉 시작", tag:"듣기"},
+    {w:5, focus:"Comprensión auditiva Tarea 3–5", routine:"강연·토론·라디오 프로그램 듣기, 빠른 속도 적응 훈련, 핵심어 메모법 연습", tag:"듣기"},
+    {w:6, focus:"1차 통합 모의고사", routine:"독해+듣기 실전 모의고사 1회(시간 재기), 오답노트 정리 및 취약 유형 표시", tag:"모의고사"},
+  ]},
+  {phase:"Fase 3 · 쓰기·말하기 집중 훈련 (7~9주)", weeks:[
+    {w:7, focus:"Expresión escrita Tarea 1", routine:"자료 종합형 에세이(서론-본론-결론) 구조 연습, 논증 연결어 정리, 매일 200자 쓰기", tag:"작문"},
+    {w:8, focus:"Expresión escrita Tarea 2", routine:"공식 서신·보고서·의견 기사 쓰기, 격식체 표현 정리, 첨삭 스스로 체크리스트 만들기", tag:"작문"},
+    {w:9, focus:"Expresión oral Tarea 1–3", routine:"모노로그(주제 발표)·사진/자료 묘사·상호작용 롤플레이 연습, 녹음 후 스스로 듣기", tag:"말하기"},
+  ]},
+  {phase:"Fase 4 · 통합 실전 & 최종 점검 (10~12주)", weeks:[
+    {w:10, focus:"2차 통합 모의고사", routine:"4개 영역 전체를 실제 시험 시간표대로 진행, 시간 배분 훈련", tag:"모의고사"},
+    {w:11, focus:"취약 영역 집중 보완", routine:"모의고사에서 드러난 약점 영역 집중 학습, 고빈도 어휘 800개 재점검", tag:"보완"},
+    {w:12, focus:"최종 리허설", routine:"최종 모의고사 실전처럼 진행, 시험 당일 전략(시간관리·마킹·긴장관리) 정리", tag:"최종점검"},
+  ]},
+];
+
+/* ---------------------------------------------------------
+   DATA: weekly vocabulary bank (12 sets)
+--------------------------------------------------------- */
+const vocabBank = {
+  1: {theme:"진단: 고빈도 시사 표현", words:[
+    ["constatar","(사실로) 확인하다, 인지하다","동사","Los expertos constatan un aumento del gasto público."],
+    ["en aras de","~을 위하여","숙어","Se tomó la medida en aras de la seguridad."],
+    ["paulatino","점진적인","형용사","Se observa un cambio paulatino en las costumbres."],
+    ["suscitar","(논쟁·관심 등을) 불러일으키다","동사","La noticia suscitó un intenso debate."],
+    ["a raíz de","~을 계기로, ~때문에","숙어","A raíz de la crisis, cambiaron las leyes."],
+    ["índole","성격, 종류","명사","Es un problema de índole social."],
+    ["contundente","단호한, 확실한","형용사","Dio una respuesta contundente."],
+    ["repercutir","영향을 미치다","동사","La subida repercute en toda la economía."],
+    ["ambigüedad","모호함","명사","El texto se presta a la ambigüedad."],
+    ["velar por","~을 보살피다, 지키다","숙어","El gobierno debe velar por los derechos."],
+    ["desencadenar","촉발시키다, 유발하다","동사","El escándalo desencadenó su dimisión."],
+    ["polémica","논쟁, 논란","명사","La reforma generó una gran polémica."],
+  ]},
+  2: {theme:"독해 전략: 논증·의견 표현", words:[
+    ["en cuanto a","~에 관해서는","숙어","En cuanto al presupuesto, no hay novedades."],
+    ["cabe destacar","특히 강조할 만하다","숙어","Cabe destacar el esfuerzo del equipo."],
+    ["sesgo","편향, 편견","명사","El estudio presenta un sesgo evidente."],
+    ["matizar","뉘앙스를 더하다, 세밀히 설명하다","동사","Quiero matizar mi comentario anterior."],
+    ["controvertido","논란이 되는","형용사","Es un tema muy controvertido."],
+    ["desmentir","(사실이 아니라고) 부인하다","동사","La empresa desmintió los rumores."],
+    ["hincapié","강조","명사","El profesor hizo hincapié en la gramática."],
+    ["esbozar","(생각·계획을) 대략 그리다","동사","El autor esboza una nueva teoría."],
+    ["prescindir de","~없이 지내다, 배제하다","숙어","No podemos prescindir de su ayuda."],
+    ["arraigado","뿌리 깊은","형용사","Es una tradición muy arraigada."],
+    ["reticencia","주저함, 소극적 태도","명사","Mostró cierta reticencia a firmar."],
+    ["fehaciente","확실한, 신빙성 있는","형용사","No hay pruebas fehacientes."],
+  ]},
+  3: {theme:"문법 심화 + 학술 어휘", words:[
+    ["conforme a","~에 따라","숙어","Actuó conforme a la ley."],
+    ["ceñirse a","~에 국한하다, 준수하다","숙어","El informe se ciñe a los datos."],
+    ["subyacente","근본에 깔린, 잠재적인","형용사","Hay un problema subyacente."],
+    ["plasmar","(생각 등을) 구체화하다, 표현하다","동사","Plasmó sus ideas en un ensayo."],
+    ["incidir en","~에 영향을 미치다, 강조하다","숙어","El clima incide en la cosecha."],
+    ["taxativo","단정적인, 명확한","형용사","Fue taxativo en su negativa."],
+    ["derivar de","~에서 파생되다","숙어","Muchos problemas derivan de la falta de diálogo."],
+    ["paliar","완화하다","동사","Buscan medidas para paliar la crisis."],
+    ["idóneo","적합한","형용사","No es el momento idóneo."],
+    ["propiciar","조성하다, 촉진하다","동사","La reunión propició un acuerdo."],
+    ["reticente","주저하는, 소극적인","형용사","Se mostró reticente al cambio."],
+    ["ahondar en","깊이 파고들다","숙어","El informe ahonda en las causas."],
+  ]},
+  4: {theme:"듣기: 뉴스·인터뷰 표현", words:[
+    ["a grandes rasgos","대략적으로","숙어","A grandes rasgos, la situación mejora."],
+    ["recalcar","강조하다","동사","El ministro recalcó la importancia del acuerdo."],
+    ["entorno","환경, 배경","명사","Creció en un entorno rural."],
+    ["cuestionar","의문을 제기하다","동사","Muchos cuestionan la decisión."],
+    ["escaso","부족한, 적은","형용사","Hay escasos recursos disponibles."],
+    ["de cara a","~을 앞두고, ~을 대비하여","숙어","De cara al invierno, hay que prepararse."],
+    ["asequible","저렴한, 접근 가능한","형용사","Buscan una vivienda asequible."],
+    ["pormenor","세부사항","명사","Explicó todos los pormenores del plan."],
+    ["holgado","여유로운, 넉넉한","형용사","Tiene un presupuesto holgado."],
+    ["encauzar","방향을 잡다, 이끌다","동사","Intentan encauzar el debate."],
+    ["índice","지수, 비율","명사","El índice de paro bajó este mes."],
+    ["reiterar","반복해서 말하다","동사","El portavoz reiteró su postura."],
+  ]},
+  5: {theme:"듣기: 강연·토론 표현", words:[
+    ["por ende","따라서","숙어","El coste bajó y, por ende, la demanda subió."],
+    ["desvincular","분리하다, 연관성을 끊다","동사","Hay que desvincular ambos conceptos."],
+    ["fomentar","촉진하다, 장려하다","동사","Buscan fomentar la lectura."],
+    ["indole social","사회적 성격","표현","Es un asunto de índole social."],
+    ["disyuntiva","양자택일의 상황, 딜레마","명사","Se enfrenta a una difícil disyuntiva."],
+    ["converger","수렴하다, 일치하다","동사","Ambas posturas convergen en un punto."],
+    ["a la larga","장기적으로","숙어","A la larga, esto beneficiará a todos."],
+    ["desatar","촉발시키다, 불러일으키다","동사","La medida desató protestas."],
+    ["salvedad","단서, 예외조항","명사","Aceptó con una salvedad."],
+    ["encomiar","칭찬하다","동사","Los críticos encomiaron su labor."],
+    ["ineludible","피할 수 없는","형용사","Es un reto ineludible."],
+    ["atenuar","완화하다, 약화시키다","동사","Buscan atenuar el impacto."],
+  ]},
+  6: {theme:"모의고사 복습: 혼동 어휘", words:[
+    ["por consiguiente","그 결과, 따라서","숙어","No llovió; por consiguiente, la cosecha fue escasa."],
+    ["salvo que","~이 아닌 한","숙어","Iremos, salvo que llueva."],
+    ["a fin de que","~하기 위해서 (접속법)","숙어","Lo explico a fin de que todos entiendan."],
+    ["so pretexto de","~을 구실로","숙어","Actuó so pretexto de ayudar."],
+    ["so pena de","~하지 않으면 (제재)","숙어","Debe pagar, so pena de una multa."],
+    ["a menos que","~이 아니라면","숙어","No iré, a menos que me invites."],
+    ["por muy... que","아무리 ~해도","숙어","Por muy difícil que sea, lo intentaré."],
+    ["dado que","~이므로","숙어","Dado que llueve, cancelamos el plan."],
+    ["siempre y cuando","~하는 조건 하에","숙어","Iremos, siempre y cuando haga buen tiempo."],
+    ["no obstante","그럼에도 불구하고","숙어","No obstante, decidió continuar."],
+  ]},
+  7: {theme:"작문: 에세이 연결어", words:[
+    ["en primer/segundo lugar","첫째로/둘째로","숙어","En primer lugar, hay que analizar los datos."],
+    ["dicho esto","그렇긴 하지만","숙어","Dicho esto, conviene matizar la cifra."],
+    ["por un lado / por otro","한편으로는 / 다른 한편으로는","숙어","Por un lado ayuda, por otro complica."],
+    ["en definitiva","결론적으로","숙어","En definitiva, el plan es viable."],
+    ["cabe señalar que","~라는 점을 지적할 만하다","숙어","Cabe señalar que los datos varían."],
+    ["a modo de conclusión","결론으로서","숙어","A modo de conclusión, cabe afirmar que..."],
+    ["si bien es cierto que","비록 ~이 사실이지만","숙어","Si bien es cierto que hay riesgos, los beneficios superan."],
+    ["conviene subrayar","강조할 필요가 있다","숙어","Conviene subrayar el papel del Estado."],
+    ["en aras de la claridad","명확성을 위해","숙어","En aras de la claridad, se simplifica el texto."],
+    ["en última instancia","결국, 궁극적으로","숙어","En última instancia, depende del ciudadano."],
+  ]},
+  8: {theme:"작문: 공식 서신·보고서 표현", words:[
+    ["me dirijo a usted con el fin de","~할 목적으로 편지 드립니다","표현","Me dirijo a usted con el fin de solicitar información."],
+    ["quedar a la espera de","~을 기다리겠습니다","표현","Quedo a la espera de su respuesta."],
+    ["adjunto le remito","첨부하여 보내드립니다","표현","Adjunto le remito el documento solicitado."],
+    ["lamento comunicarle que","유감스럽게도 알려드립니다","표현","Lamento comunicarle que el plazo ha vencido."],
+    ["atentamente","(서신 맺음말) 정중히","표현","Atentamente, Juan Pérez."],
+    ["en relación con el asunto de","~건과 관련하여","표현","En relación con el asunto de la reserva..."],
+    ["por medio de la presente","이 서신을 통하여","표현","Por medio de la presente, informo de..."],
+    ["agradecería que","~해 주시면 감사하겠습니다 (접속법)","표현","Agradecería que me confirmara la fecha."],
+    ["sin otro particular","별다른 용건 없이 (맺음말)","표현","Sin otro particular, se despide atentamente."],
+  ]},
+  9: {theme:"말하기: 발표·상호작용 표현", words:[
+    ["a mi modo de ver","내가 보기에는","표현","A mi modo de ver, la solución es clara."],
+    ["si me permite añadir","덧붙여도 된다면","표현","Si me permite añadir, hay otro factor."],
+    ["no es cuestión de","~할 문제가 아니다","표현","No es cuestión de dinero, sino de tiempo."],
+    ["llevar la contraria","반대 입장을 취하다","표현","No quiero llevarte la contraria, pero..."],
+    ["ponerse en el lugar de","~의 입장이 되어보다","표현","Hay que ponerse en el lugar del otro."],
+    ["dicho de otro modo","다른 말로 하면","표현","Dicho de otro modo, el plan fracasó."],
+    ["ir al grano","본론으로 들어가다","표현","Vamos a ir al grano."],
+    ["darle vueltas a algo","어떤 것에 대해 계속 고민하다","표현","Llevo días dándole vueltas a esto."],
+    ["quedarse corto","기대에 못 미치다, 부족하다","표현","La explicación se quedó corta."],
+    ["sacar a colación","화제로 꺼내다","표현","Prefiero no sacar ese tema a colación."],
+  ]},
+  10: {theme:"통합 복습: 경제·사회 어휘", words:[
+    ["coyuntura","(경제·정치의) 국면, 정세","명사","La coyuntura económica es incierta."],
+    ["desigualdad","불평등","명사","Crece la desigualdad social."],
+    ["precariedad","불안정성","명사","Denuncian la precariedad laboral."],
+    ["superávit","흑자","명사","El país logró un superávit fiscal."],
+    ["déficit","적자","명사","El déficit público preocupa a los expertos."],
+    ["repunte","(경기 등의) 반등","명사","Se espera un repunte del consumo."],
+    ["estancamiento","정체","명사","La economía sufre un estancamiento."],
+    ["brecha","격차","명사","La brecha salarial persiste."],
+  ]},
+  11: {theme:"고빈도 어휘 재점검: 환경·과학", words:[
+    ["huella de carbono","탄소 발자국","표현","Reducir la huella de carbono es clave."],
+    ["agotamiento","고갈","명사","El agotamiento de recursos preocupa."],
+    ["mitigar","완화하다","동사","Buscan mitigar el cambio climático."],
+    ["vanguardia","선두, 최첨단","명사","Trabaja en la vanguardia de la biotecnología."],
+    ["obsoleto","구식의","형용사","La tecnología quedó obsoleta."],
+    ["desarrollo sostenible","지속 가능한 발전","표현","Apuestan por el desarrollo sostenible."],
+    ["algoritmo","알고리즘","명사","El algoritmo predice el comportamiento."],
+    ["escasez","부족, 결핍","명사","Hay escasez de agua potable."],
+  ]},
+  12: {theme:"최종 점검: 시험장 표현 & 시간관리", words:[
+    ["a contrarreloj","시간에 쫓겨","표현","Terminó el examen a contrarreloj."],
+    ["repasar","복습하다, 다시 살펴보다","동사","Conviene repasar las respuestas antes de entregar."],
+    ["descartar","(선택지를) 배제하다","동사","Descarté dos opciones por eliminación."],
+    ["ceñirse al tiempo","시간을 지키다","표현","Hay que ceñirse al tiempo asignado."],
+    ["por eliminación","제거법으로","표현","Elegí la respuesta por eliminación."],
+    ["dar por sentado","당연하게 여기다","표현","No hay que dar nada por sentado."],
+    ["mantener la calma","침착함을 유지하다","표현","Es clave mantener la calma en la prueba oral."],
+    ["rellenar la plantilla","답안지를 작성하다","표현","No olvides rellenar bien la plantilla de respuestas."],
+  ]},
+};
+
+/* ---------------------------------------------------------
+   DATA: master vocabulary bank (1000 words, 10 categories)
+--------------------------------------------------------- */
+const masterVocab = {
+  "경제와 노동": [
+    ['coyuntura','(경제·상황의) 국면, 정세'],
+    ['déficit','적자'],
+    ['superávit','흑자'],
+    ['recesión','경기침체'],
+    ['inflación','인플레이션'],
+    ['desempleo','실업'],
+    ['paro','실업(상태)'],
+    ['nómina','급여명세서, 월급'],
+    ['sueldo','급여'],
+    ['salario','임금'],
+    ['impuesto','세금'],
+    ['IVA','부가가치세'],
+    ['hipoteca','주택담보대출'],
+    ['préstamo','대출'],
+    ['endeudamiento','부채상태'],
+    ['ahorro','저축'],
+    ['inversión','투자'],
+    ['rentabilidad','수익성'],
+    ['beneficio','이익'],
+    ['pérdida','손실'],
+    ['quiebra','파산'],
+    ['fusión','합병'],
+    ['adquisición','인수'],
+    ['accionista','주주'],
+    ['bolsa','증권거래소'],
+    ['acción bursátil','주식'],
+    ['mercado','시장'],
+    ['oferta','공급'],
+    ['demanda','수요'],
+    ['competencia','경쟁'],
+    ['monopolio','독점'],
+    ['subvención','보조금'],
+    ['arancel','관세'],
+    ['exportación','수출'],
+    ['importación','수입'],
+    ['PIB','국내총생산'],
+    ['índice','지수'],
+    ['previsión','전망'],
+    ['estancamiento','정체'],
+    ['auge','호황'],
+    ['crisis','위기'],
+    ['austeridad','긴축'],
+    ['gasto público','공공지출'],
+    ['deuda pública','국가부채'],
+    ['productividad','생산성'],
+    ['plantilla','전 직원, 직원 명단'],
+    ['despido','해고'],
+    ['contratación','고용, 채용'],
+    ['jubilación','은퇴'],
+    ['pensión','연금'],
+    ['cotización','(사회보장) 납부, 시세'],
+    ['sindicato','노동조합'],
+    ['huelga','파업'],
+    ['convenio colectivo','단체협약'],
+    ['conciliación','일과 삶의 조화'],
+    ['teletrabajo','원격근무'],
+    ['emprendedor','창업가'],
+    ['autónomo','자영업자'],
+    ['pyme','중소기업'],
+    ['multinacional','다국적기업'],
+    ['filial','자회사'],
+    ['sede','본사, 소재지'],
+    ['facturación','매출'],
+    ['rentable','수익성 있는'],
+    ['solvente','지불능력 있는'],
+    ['insolvencia','지불불능'],
+    ['embargo','압류'],
+    ['aval','보증'],
+    ['fianza','보증금'],
+    ['patrimonio','자산, 재산'],
+    ['divisa','외화'],
+    ['tipo de cambio','환율'],
+    ['volatilidad','변동성'],
+    ['especulación','투기'],
+    ['burbuja económica','거품경제'],
+    ['desregulación','규제완화'],
+    ['blanqueo de capitales','자금세탁'],
+    ['evasión fiscal','조세회피'],
+    ['paraíso fiscal','조세피난처'],
+    ['gravamen','부과금, 세금'],
+    ['recaudación','세수, 징수'],
+    ['presupuesto','예산'],
+    ['déficit fiscal','재정적자'],
+    ['política monetaria','통화정책'],
+    ['tipo de interés','금리'],
+    ['banco central','중앙은행'],
+    ['liquidez','유동성'],
+    ['solidez financiera','재정적 견고함'],
+    ['volátil','변동성이 큰'],
+    ['al alza','상승세의'],
+    ['a la baja','하락세의'],
+    ['repunte','반등'],
+    ['desplome','급락'],
+    ['estanflación','스태그플레이션'],
+    ['brecha salarial','임금격차'],
+    ['precariedad laboral','노동 불안정성'],
+    ['vacante','공석'],
+    ['currículum','이력서'],
+    ['entrevista de trabajo','면접'],
+    ['formación continua','지속적 직무교육'],
+  ],
+  "사회와 정치": [
+    ['ciudadanía','시민권, 시민'],
+    ['sufragio','투표권'],
+    ['escaño','의석'],
+    ['diputado','국회의원'],
+    ['senador','상원의원'],
+    ['gabinete','내각'],
+    ['coalición','연립'],
+    ['mandato','임기, 위임'],
+    ['legislatura','입법회기'],
+    ['referéndum','국민투표'],
+    ['comicios','선거'],
+    ['abstención','기권'],
+    ['electorado','유권자'],
+    ['sondeo','여론조사'],
+    ['encuesta','설문조사'],
+    ['opinión pública','여론'],
+    ['manifestación','시위'],
+    ['huelga general','총파업'],
+    ['disidencia','반체제, 이견'],
+    ['censura','검열'],
+    ['libertad de expresión','표현의 자유'],
+    ['derechos humanos','인권'],
+    ['igualdad','평등'],
+    ['desigualdad','불평등'],
+    ['discriminación','차별'],
+    ['inclusión','포용'],
+    ['diversidad','다양성'],
+    ['minoría','소수자'],
+    ['exclusión social','사회적 배제'],
+    ['marginación','소외'],
+    ['vulnerabilidad','취약성'],
+    ['colectivo','집단, 공동체'],
+    ['ONG','비정부기구'],
+    ['voluntariado','자원봉사'],
+    ['solidaridad','연대'],
+    ['cohesión social','사회적 결속'],
+    ['tejido social','사회적 구조, 조직'],
+    ['polarización','양극화'],
+    ['populismo','포퓰리즘'],
+    ['corrupción','부패'],
+    ['soborno','뇌물'],
+    ['transparencia','투명성'],
+    ['rendición de cuentas','책임 이행, 설명책임'],
+    ['fiscalización','감시, 감독'],
+    ['impunidad','면책'],
+    ['delito','범죄'],
+    ['delincuencia','범죄(현상)'],
+    ['seguridad ciudadana','시민안전'],
+    ['orden público','공공질서'],
+    ['estado de derecho','법치국가'],
+    ['constitución','헌법'],
+    ['reforma','개혁'],
+    ['legislación','법률체계'],
+    ['decreto','법령'],
+    ['normativa','규정'],
+    ['vigente','현행의'],
+    ['derogar','(법을) 폐지하다'],
+    ['promulgar','(법을) 공포하다'],
+    ['acatar','준수하다'],
+    ['incumplir','위반하다'],
+    ['sanción','제재'],
+    ['multa','벌금'],
+    ['juicio','재판'],
+    ['sentencia','판결'],
+    ['fiscal','검사'],
+    ['magistrado','판사'],
+    ['abogado defensor','변호인'],
+    ['demanda judicial','소송'],
+    ['querella','고소'],
+    ['veredicto','평결'],
+    ['indulto','사면'],
+    ['amnistía','대사면'],
+    ['inmigración','이주(유입)'],
+    ['emigración','이주(유출)'],
+    ['asilo','망명'],
+    ['refugiado','난민'],
+    ['apátrida','무국적자'],
+    ['integración','통합'],
+    ['xenofobia','외국인 혐오'],
+    ['racismo','인종차별'],
+    ['estereotipo','고정관념'],
+    ['prejuicio','편견'],
+    ['tolerancia','관용'],
+    ['convivencia','공존'],
+    ['identidad','정체성'],
+    ['patrimonio cultural','문화유산'],
+    ['globalización','세계화'],
+    ['geopolítica','지정학'],
+    ['diplomacia','외교'],
+    ['tratado','조약'],
+    ['cumbre','정상회담'],
+    ['sanciones internacionales','국제제재'],
+    ['conflicto armado','무력분쟁'],
+    ['tregua','휴전'],
+    ['mediación','중재'],
+    ['negociación','협상'],
+    ['pacto','협약'],
+    ['alianza','동맹'],
+    ['soberanía','주권'],
+    ['autodeterminación','자결권'],
+  ],
+  "환경과 과학": [
+    ['sostenibilidad','지속가능성'],
+    ['biodiversidad','생물다양성'],
+    ['ecosistema','생태계'],
+    ['hábitat','서식지'],
+    ['especie en peligro','멸종위기종'],
+    ['extinción','멸종'],
+    ['deforestación','삼림파괴'],
+    ['reforestación','재조림'],
+    ['desertificación','사막화'],
+    ['erosión','침식'],
+    ['sequía','가뭄'],
+    ['inundación','홍수'],
+    ['ola de calor','폭염'],
+    ['temporal','폭풍, 악천후'],
+    ['catástrofe natural','자연재해'],
+    ['emisiones','배출가스'],
+    ['gases de efecto invernadero','온실가스'],
+    ['calentamiento global','지구온난화'],
+    ['huella de carbono','탄소발자국'],
+    ['energía renovable','재생에너지'],
+    ['energía eólica','풍력에너지'],
+    ['energía solar','태양에너지'],
+    ['combustible fósil','화석연료'],
+    ['central nuclear','원자력발전소'],
+    ['residuo','폐기물'],
+    ['reciclaje','재활용'],
+    ['vertido','유출, 투기'],
+    ['contaminación','오염'],
+    ['depuradora','정수처리시설'],
+    ['acuífero','대수층'],
+    ['embalse','저수지'],
+    ['escasez hídrica','물 부족'],
+    ['biodegradable','생분해성의'],
+    ['plástico de un solo uso','일회용 플라스틱'],
+    ['economía circular','순환경제'],
+    ['impacto ambiental','환경영향'],
+    ['huella ecológica','생태발자국'],
+    ['conservación','보전'],
+    ['paraje natural','자연경관지'],
+    ['reserva natural','자연보호구역'],
+    ['fauna','동물상'],
+    ['flora','식물상'],
+    ['ecología','생태학'],
+    ['biotecnología','생명공학'],
+    ['ingeniería genética','유전공학'],
+    ['clonación','복제'],
+    ['célula madre','줄기세포'],
+    ['ensayo clínico','임상시험'],
+    ['vacuna','백신'],
+    ['patógeno','병원체'],
+    ['pandemia','팬데믹'],
+    ['brote','(질병) 발생, 발발'],
+    ['contagio','전염'],
+    ['inmunidad','면역'],
+    ['epidemiología','역학'],
+    ['laboratorio','실험실'],
+    ['investigación','연구'],
+    ['hallazgo','발견'],
+    ['descubrimiento','발견'],
+    ['hipótesis científica','과학적 가설'],
+    ['evidencia científica','과학적 증거'],
+    ['dato empírico','실증적 데이터'],
+    ['metodología','방법론'],
+    ['algoritmo','알고리즘'],
+    ['inteligencia artificial','인공지능'],
+    ['aprendizaje automático','머신러닝'],
+    ['big data','빅데이터'],
+    ['ciberseguridad','사이버보안'],
+    ['robótica','로보틱스'],
+    ['nanotecnología','나노기술'],
+    ['exploración espacial','우주탐사'],
+    ['telescopio','망원경'],
+    ['satélite','위성'],
+    ['órbita','궤도'],
+    ['astrofísica','천체물리학'],
+    ['física cuántica','양자물리학'],
+    ['partícula subatómica','아원자입자'],
+    ['mutación','돌연변이'],
+    ['genoma','게놈'],
+    ['ADN','DNA'],
+    ['biólogo','생물학자'],
+    ['sismo','지진'],
+    ['volcán','화산'],
+    ['tectónica de placas','판구조론'],
+    ['geología','지질학'],
+    ['océano','해양'],
+    ['corriente marina','해류'],
+    ['arrecife de coral','산호초'],
+    ['glaciar','빙하'],
+    ['capa de hielo','빙상'],
+    ['nivel del mar','해수면'],
+    ['sequía prolongada','장기 가뭄'],
+    ['anomalía climática','기후 이상현상'],
+    ['fenómeno meteorológico','기상 현상'],
+    ['previsión meteorológica','일기예보'],
+    ['humedal','습지'],
+    ['cuenca hidrográfica','유역'],
+    ['agricultura sostenible','지속가능한 농업'],
+    ['monocultivo','단일경작'],
+    ['transición energética','에너지 전환'],
+  ],
+  "기술과 디지털": [
+    ['dispositivo','기기'],
+    ['aplicación','애플리케이션'],
+    ['red social','소셜네트워크'],
+    ['plataforma digital','디지털 플랫폼'],
+    ['usuario','사용자'],
+    ['contraseña','비밀번호'],
+    ['privacidad','사생활, 프라이버시'],
+    ['dato personal','개인정보'],
+    ['filtración de datos','데이터 유출'],
+    ['hackeo','해킹'],
+    ['virus informático','컴퓨터 바이러스'],
+    ['malware','악성코드'],
+    ['estafa online','온라인 사기'],
+    ['phishing','피싱'],
+    ['desinformación','허위정보'],
+    ['noticia falsa','가짜뉴스'],
+    ['algoritmo de recomendación','추천 알고리즘'],
+    ['sesgo algorítmico','알고리즘 편향'],
+    ['automatización','자동화'],
+    ['obsolescencia programada','계획적 진부화'],
+    ['brecha digital','디지털 격차'],
+    ['alfabetización digital','디지털 리터러시'],
+    ['nube (computación)','클라우드'],
+    ['servidor','서버'],
+    ['ancho de banda','대역폭'],
+    ['conectividad','연결성'],
+    ['dispositivo portátil','웨어러블 기기'],
+    ['realidad virtual','가상현실'],
+    ['realidad aumentada','증강현실'],
+    ['metaverso','메타버스'],
+    ['criptomoneda','암호화폐'],
+    ['cadena de bloques','블록체인'],
+    ['comercio electrónico','전자상거래'],
+    ['factura electrónica','전자청구서'],
+    ['firma digital','전자서명'],
+    ['videollamada','화상통화'],
+    ['streaming','스트리밍'],
+    ['suscripción','구독'],
+    ['obsolescencia','진부화'],
+    ['innovación disruptiva','파괴적 혁신'],
+    ['startup','스타트업'],
+    ['incubadora empresarial','창업 인큐베이터'],
+    ['patente','특허'],
+    ['propiedad intelectual','지적재산권'],
+    ['código abierto','오픈소스'],
+    ['desarrollador','개발자'],
+    ['interfaz','인터페이스'],
+    ['experiencia de usuario','사용자 경험'],
+    ['accesibilidad','접근성'],
+    ['dependencia tecnológica','기술의존'],
+    ['desconexión digital','디지털 디톡스'],
+    ['adicción a las pantallas','스크린 중독'],
+    ['huella digital','디지털 흔적'],
+    ['identidad digital','디지털 정체성'],
+    ['vigilancia masiva','대규모 감시'],
+    ['rastreo','추적'],
+    ['geolocalización','위치추적'],
+    ['dron','드론'],
+    ['vehículo autónomo','자율주행차'],
+    ['impresión 3D','3D 프린팅'],
+    ['sensor','센서'],
+    ['chip','칩'],
+    ['procesador','프로세서'],
+    ['capacidad de almacenamiento','저장용량'],
+    ['obsolescencia tecnológica','기술적 진부화'],
+    ['brecha generacional','세대 격차'],
+    ['nativo digital','디지털 네이티브'],
+    ['red neuronal','신경망'],
+    ['modelo de lenguaje','언어모델'],
+    ['automatizar','자동화하다'],
+    ['digitalizar','디지털화하다'],
+    ['optimizar','최적화하다'],
+    ['escalable','확장 가능한'],
+    ['infraestructura digital','디지털 인프라'],
+    ['ciberataque','사이버공격'],
+    ['vulnerabilidad informática','보안 취약점'],
+    ['cortafuegos','방화벽'],
+    ['encriptación','암호화'],
+    ['gobernanza digital','디지털 거버넌스'],
+    ['ciberdelincuencia','사이버 범죄'],
+  ],
+  "보건과 의료": [
+    ['sistema sanitario','보건의료체계'],
+    ['atención primaria','1차 진료'],
+    ['lista de espera','대기 명단'],
+    ['diagnóstico','진단'],
+    ['tratamiento','치료'],
+    ['terapia','요법, 치료'],
+    ['rehabilitación','재활'],
+    ['prevención','예방'],
+    ['cribado','검진, 선별검사'],
+    ['síntoma','증상'],
+    ['patología','병리'],
+    ['enfermedad crónica','만성질환'],
+    ['enfermedad rara','희귀질환'],
+    ['trastorno','장애(질환)'],
+    ['brote epidémico','전염병 발생'],
+    ['contagioso','전염성의'],
+    ['inmunodeprimido','면역저하된'],
+    ['efecto secundario','부작용'],
+    ['dosis','복용량'],
+    ['receta médica','처방전'],
+    ['fármaco','약물'],
+    ['medicamento genérico','제네릭 의약품'],
+    ['biosimilar','바이오시밀러'],
+    ['vacunación','예방접종'],
+    ['inmunización','면역화'],
+    ['cuidados paliativos','완화의료'],
+    ['salud mental','정신건강'],
+    ['ansiedad','불안(장애)'],
+    ['depresión','우울증'],
+    ['estrés','스트레스'],
+    ['agotamiento laboral','직무 소진(번아웃)'],
+    ['bienestar','웰빙, 안녕'],
+    ['calidad de vida','삶의 질'],
+    ['esperanza de vida','기대수명'],
+    ['envejecimiento','노화'],
+    ['dependencia funcional','돌봄필요 상태'],
+    ['cuidador','돌봄제공자'],
+    ['residencia de mayores','요양원'],
+    ['discapacidad','장애'],
+    ['accesibilidad universal','보편적 접근성'],
+    ['nutrición','영양'],
+    ['desnutrición','영양실조'],
+    ['obesidad','비만'],
+    ['hábito saludable','건강한 습관'],
+    ['sedentarismo','좌식생활'],
+    ['adicción','중독'],
+    ['abuso de sustancias','약물남용'],
+    ['desintoxicación','해독'],
+    ['telemedicina','원격의료'],
+    ['historia clínica','병력, 진료기록'],
+    ['quirófano','수술실'],
+    ['cirugía','수술'],
+    ['intervención quirúrgica','외과적 시술'],
+    ['anestesia','마취'],
+    ['urgencias','응급실'],
+    ['ambulancia','구급차'],
+    ['donante','기증자'],
+    ['trasplante','이식'],
+    ['biopsia','생검'],
+    ['escáner','스캐너, 촬영기'],
+    ['resonancia magnética','자기공명영상(MRI)'],
+    ['análisis de sangre','혈액검사'],
+    ['epidemia','전염병 유행'],
+    ['cuarentena','격리'],
+    ['confinamiento','봉쇄, 록다운'],
+    ['protocolo sanitario','보건 프로토콜'],
+    ['personal sanitario','의료진'],
+    ['saturación hospitalaria','병원 포화상태'],
+    ['escasez de personal','인력부족'],
+    ['gasto sanitario','보건지출'],
+    ['copago','본인부담금'],
+    ['cobertura sanitaria','의료보장'],
+    ['seguro médico','의료보험'],
+    ['mutua','공제조합, 사보험'],
+    ['baja laboral','병가'],
+    ['incapacidad temporal','일시적 근로능력상실'],
+    ['revisión médica','건강검진'],
+    ['hábito alimentario','식습관'],
+    ['triaje','중증도 분류'],
+    ['comorbilidad','동반이환'],
+  ],
+  "문화와 교육": [
+    ['patrimonio histórico','역사유산'],
+    ['patrimonio inmaterial','무형유산'],
+    ['legado cultural','문화유산'],
+    ['exposición','전시'],
+    ['muestra artística','전시(작품)'],
+    ['obra maestra','걸작'],
+    ['vanguardia','전위, 선두'],
+    ['mecenazgo','예술 후원'],
+    ['subvención cultural','문화보조금'],
+    ['gira','순회공연'],
+    ['estreno','초연, 개봉'],
+    ['crítica (reseña)','비평'],
+    ['guion','대본, 시나리오'],
+    ['rodaje','촬영'],
+    ['elenco','출연진'],
+    ['dramaturgia','극작'],
+    ['puesta en escena','무대연출'],
+    ['performance','퍼포먼스'],
+    ['instalación artística','설치미술'],
+    ['curador','큐레이터'],
+    ['conservación de obras','작품 보존'],
+    ['restauración','복원'],
+    ['falsificación','위조'],
+    ['autenticidad','진정성'],
+    ['identidad cultural','문화정체성'],
+    ['diversidad cultural','문화다양성'],
+    ['folclore','민속'],
+    ['tradición oral','구전전통'],
+    ['costumbrismo','풍속주의'],
+    ['mestizaje','혼종성, 융합'],
+    ['canon literario','문학정전'],
+    ['género literario','문학 장르'],
+    ['narrativa','서사'],
+    ['ensayo literario','에세이'],
+    ['metáfora','은유'],
+    ['simbolismo','상징주의'],
+    ['crítica literaria','문학비평'],
+    ['editorial','출판사'],
+    ['tirada','발행부수'],
+    ['best seller','베스트셀러'],
+    ['derechos de autor','저작권'],
+    ['plagio','표절'],
+    ['censura cultural','문화 검열'],
+    ['subtítulos','자막'],
+    ['doblaje','더빙'],
+    ['taquilla','매표소, 흥행수익'],
+    ['audiencia','시청자, 관객'],
+    ['crítica de cine','영화평'],
+    ['banda sonora','사운드트랙'],
+    ['festival cultural','문화 축제'],
+    ['sistema educativo','교육제도'],
+    ['currículo escolar','교육과정'],
+    ['plan de estudios','커리큘럼'],
+    ['asignatura','과목'],
+    ['matrícula','등록(비)'],
+    ['beca','장학금'],
+    ['abandono escolar','학업중단'],
+    ['fracaso escolar','학업실패'],
+    ['rendimiento académico','학업성취도'],
+    ['competencia (habilidad)','역량'],
+    ['alfabetización','문해력'],
+    ['aprendizaje autónomo','자기주도학습'],
+    ['enseñanza a distancia','원격교육'],
+    ['formación profesional','직업훈련'],
+    ['titulación','학위, 자격'],
+    ['acreditación','인증'],
+    ['evaluación','평가'],
+    ['examen de acceso','입학시험'],
+    ['nota de corte','커트라인 점수'],
+    ['profesorado','교원, 교사진'],
+    ['claustro','교수회의, 교원단'],
+    ['pedagogía','교육학'],
+    ['didáctica','교수법'],
+    ['tutoría','지도교사제도'],
+    ['orientación académica','진로지도'],
+    ['conciliación familiar','가정 양립'],
+    ['brecha educativa','교육격차'],
+    ['igualdad de oportunidades','기회균등'],
+    ['movilidad social','사회적 이동성'],
+    ['meritocracia','능력주의'],
+    ['inclusión educativa','교육적 포용'],
+    ['necesidades especiales','특수교육 요구'],
+    ['acoso escolar','학교폭력'],
+    ['convivencia escolar','학교내 공존'],
+    ['formación continua (educación)','평생교육'],
+    ['aprendizaje permanente','평생학습'],
+    ['competencia digital','디지털 역량'],
+    ['pensamiento crítico','비판적 사고'],
+    ['creatividad','창의성'],
+    ['innovación educativa','교육혁신'],
+    ['gamificación','게이미피케이션'],
+    ['aula invertida','거꾸로 교실'],
+    ['tutor legal','법적 보호자'],
+    ['progenitor','부모(법률용어)'],
+    ['conciliación laboral-familiar','일-가정 양립'],
+    ['desarrollo infantil','아동발달'],
+    ['primera infancia','영유아기'],
+    ['adolescencia','청소년기'],
+    ['madurez','성숙(기)'],
+    ['tercera edad','노년층'],
+  ],
+  "빈출 동사": [
+    ['constatar','확인하다, 인지하다'],
+    ['suscitar','불러일으키다'],
+    ['propiciar','조성하다, 촉진하다'],
+    ['desencadenar','촉발시키다'],
+    ['repercutir','영향을 미치다'],
+    ['incidir en','~에 영향을 주다'],
+    ['derivar de','~에서 파생되다'],
+    ['desembocar en','~로 귀결되다'],
+    ['converger','수렴하다'],
+    ['diverger','갈라지다, 분기하다'],
+    ['atenuar','완화시키다'],
+    ['mitigar','완화하다'],
+    ['paliar','완화하다'],
+    ['agravar','악화시키다'],
+    ['exacerbar','악화시키다'],
+    ['desatar','촉발시키다'],
+    ['fomentar','장려하다'],
+    ['impulsar','추진하다'],
+    ['propugnar','주창하다'],
+    ['abogar por','~을 옹호하다'],
+    ['rebatir','반박하다'],
+    ['refutar','논박하다'],
+    ['desmentir','부인하다'],
+    ['corroborar','확증하다'],
+    ['cerciorarse de','확인하다, 확신하다'],
+    ['vislumbrar','어렴풋이 보다, 예견하다'],
+    ['entrever','짐작하다'],
+    ['anticipar','예상하다'],
+    ['prever','예측하다'],
+    ['augurar','예고하다'],
+    ['vaticinar','예언하다'],
+    ['plasmar','구체화하다'],
+    ['encauzar','방향을 잡다'],
+    ['orientar','이끌다, 지향하다'],
+    ['redirigir','재조정하다'],
+    ['replantear','재고하다'],
+    ['reformular','재구성하다'],
+    ['matizar','뉘앙스를 더하다'],
+    ['puntualizar','명확히 하다'],
+    ['recalcar','강조하다'],
+    ['subrayar','강조하다'],
+    ['remarcar','강조하다'],
+    ['destacar','부각시키다'],
+    ['resaltar','부각시키다'],
+    ['aludir a','언급하다, 암시하다'],
+    ['insinuar','암시하다'],
+    ['sugerir','시사하다'],
+    ['denotar','나타내다, 암시하다'],
+    ['reflejar','반영하다'],
+    ['evidenciar','명백히 보여주다'],
+    ['patentizar','명백히 드러내다'],
+    ['manifestar','표명하다'],
+    ['exteriorizar','표출하다'],
+    ['exponer','설명하다, 진술하다'],
+    ['argumentar','논증하다'],
+    ['fundamentar','근거를 두다'],
+    ['sustentar','뒷받침하다'],
+    ['respaldar','지지하다'],
+    ['avalar','보증하다, 지지하다'],
+    ['refrendar','승인하다, 재가하다'],
+    ['ratificar','비준하다'],
+    ['vetar','거부권을 행사하다'],
+    ['impugnar','이의를 제기하다'],
+    ['cuestionar','의문을 제기하다'],
+    ['objetar','반대하다'],
+    ['discrepar','의견을 달리하다'],
+    ['disentir','반대의견을 가지다'],
+    ['coincidir en','의견이 일치하다'],
+    ['concurrir en','(의견 등이) 일치하다'],
+    ['consensuar','합의하다'],
+    ['pactar','합의하다'],
+    ['acordar','합의하다'],
+    ['conciliar','조화시키다'],
+    ['armonizar','조화시키다'],
+    ['equilibrar','균형을 맞추다'],
+    ['sopesar','저울질하다, 심사숙고하다'],
+    ['ponderar','심사숙고하다'],
+    ['valorar','평가하다'],
+    ['catalogar','분류하다'],
+    ['clasificar','분류하다'],
+    ['categorizar','범주화하다'],
+    ['diferenciar','구별하다'],
+    ['discernir','분별하다'],
+    ['distinguir','구별하다'],
+    ['desvincular','분리하다'],
+    ['vincular','연결짓다'],
+    ['asociar','연관짓다'],
+    ['correlacionar','상관관계를 짓다'],
+    ['condicionar','조건을 부여하다, 좌우하다'],
+    ['determinar','결정하다, 규명하다'],
+    ['desatender','소홀히 하다'],
+    ['descuidar','소홀히 하다'],
+    ['velar por','~을 보살피다'],
+    ['salvaguardar','보호하다'],
+    ['preservar','보존하다'],
+    ['perpetuar','영속시키다'],
+    ['erradicar','근절하다'],
+    ['subsanar','시정하다, 바로잡다'],
+    ['remediar','개선하다, 해결하다'],
+    ['solventar','해결하다'],
+    ['afrontar','맞서다, 직면하다'],
+    ['encarar','직면하다'],
+    ['hacer frente a','~에 맞서다'],
+    ['subyacer','근본에 깔려있다'],
+    ['residir en','~에 있다(근본원인이)'],
+    ['estribar en','~에 근거하다'],
+    ['obedecer a','~에 기인하다'],
+    ['conllevar','수반하다'],
+    ['acarrear','(결과를) 초래하다'],
+    ['entrañar','내포하다'],
+    ['implicar','함의하다, 수반하다'],
+    ['comportar','수반하다'],
+    ['traducirse en','~로 이어지다'],
+    ['redundar en','~라는 결과로 이어지다'],
+    ['desvirtuar','왜곡하다, 변질시키다'],
+    ['tergiversar','왜곡하다'],
+    ['distorsionar','왜곡하다'],
+    ['minimizar','축소하다, 최소화하다'],
+    ['magnificar','과장하다'],
+    ['exagerar','과장하다'],
+  ],
+  "형용사": [
+    ['contundente','단호한, 확실한'],
+    ['controvertido','논란이 되는'],
+    ['polémico','논쟁적인'],
+    ['arraigado','뿌리깊은'],
+    ['paulatino','점진적인'],
+    ['gradual','점진적인'],
+    ['vertiginoso','현기증 나는, 급속한'],
+    ['acelerado','가속화된'],
+    ['sostenido','지속적인'],
+    ['persistente','지속되는'],
+    ['recurrente','반복적인'],
+    ['esporádico','산발적인'],
+    ['puntual','일시적인, 시간을 지키는'],
+    ['latente','잠재적인'],
+    ['subyacente','근본에 깔린'],
+    ['palpable','확연한'],
+    ['tangible','가시적인'],
+    ['intangible','무형의'],
+    ['ambiguo','모호한'],
+    ['taxativo','단정적인'],
+    ['categórico','단호한'],
+    ['tajante','단호한'],
+    ['rotundo','명확한, 단호한'],
+    ['fehaciente','확실한, 신빙성 있는'],
+    ['verosímil','그럴듯한'],
+    ['inverosímil','믿기지 않는'],
+    ['plausible','타당한'],
+    ['sesgado','편향된'],
+    ['imparcial','공정한'],
+    ['objetivo','객관적인'],
+    ['subjetivo','주관적인'],
+    ['riguroso','엄격한, 엄밀한'],
+    ['laxo','느슨한'],
+    ['flexible','유연한'],
+    ['idóneo','적합한'],
+    ['pertinente','타당한, 적절한'],
+    ['oportuno','시의적절한'],
+    ['improcedente','부적절한'],
+    ['desmedido','과도한'],
+    ['exorbitante','터무니없는'],
+    ['exiguo','미미한'],
+    ['escaso','부족한'],
+    ['holgado','넉넉한'],
+    ['asequible','접근 가능한, 저렴한'],
+    ['inasequible','접근 불가능한'],
+    ['exhaustivo','철저한'],
+    ['minucioso','세심한'],
+    ['meticuloso','꼼꼼한'],
+    ['somero','피상적인'],
+    ['superficial','피상적인'],
+    ['profundo','심오한'],
+    ['arduo','힘든'],
+    ['tedioso','지루한'],
+    ['ineludible','피할 수 없는'],
+    ['inevitable','불가피한'],
+    ['imprescindible','필수불가결한'],
+    ['prescindible','없어도 되는'],
+    ['novedoso','참신한'],
+    ['innovador','혁신적인'],
+    ['vanguardista','전위적인'],
+    ['obsoleto','구식의'],
+    ['anticuado','구식의'],
+    ['desfasado','시대에 뒤떨어진'],
+    ['pionero','선구적인'],
+    ['emergente','신흥의'],
+    ['incipiente','초기의, 막 생겨나는'],
+    ['consolidado','확고해진'],
+    ['generalizado','일반화된, 만연한'],
+    ['predominante','지배적인'],
+    ['minoritario','소수의'],
+    ['mayoritario','다수의'],
+    ['unánime','만장일치의'],
+    ['dispar','상이한, 차이나는'],
+    ['heterogéneo','이질적인'],
+    ['homogéneo','동질적인'],
+    ['diverso','다양한'],
+    ['versátil','다재다능한'],
+    ['polifacético','다면적인'],
+    ['intrincado','복잡한'],
+    ['complejo','복잡한'],
+    ['enrevesado','뒤얽힌, 복잡한'],
+    ['escueto','간결한'],
+    ['conciso','간결한'],
+    ['prolijo','장황한'],
+    ['redundante','중복되는'],
+    ['reiterativo','반복적인'],
+    ['elocuente','웅변적인, 설득력 있는'],
+    ['persuasivo','설득력 있는'],
+    ['convincente','설득력 있는'],
+    ['endeble','취약한, 허약한'],
+    ['sólido','견고한'],
+    ['frágil','연약한'],
+    ['vulnerable','취약한'],
+    ['resiliente','회복력 있는'],
+    ['resistente','내구성 있는'],
+    ['duradero','지속적인, 오래가는'],
+    ['efímero','일시적인, 덧없는'],
+    ['lucrativo','수익성 있는'],
+    ['gravoso','부담스러운'],
+    ['baladí','하찮은, 사소한'],
+  ],
+  "접속사와 표현": [
+    ['en aras de','~을 위하여'],
+    ['a raíz de','~을 계기로'],
+    ['en virtud de','~에 의거하여'],
+    ['conforme a','~에 따라'],
+    ['con arreglo a','~에 따라'],
+    ['en función de','~에 따라'],
+    ['en pos de','~을 추구하여'],
+    ['so pena de','~하지 않으면(제재)'],
+    ['so pretexto de','~을 구실로'],
+    ['a modo de','~의 형태로'],
+    ['a título de','~의 자격으로'],
+    ['a efectos de','~의 목적으로'],
+    ['con miras a','~을 목표로'],
+    ['de cara a','~을 앞두고'],
+    ['en detrimento de','~에 손해가 되도록'],
+    ['en pro de','~을 위하여'],
+    ['al margen de','~와 별개로'],
+    ['a expensas de','~의 희생으로'],
+    ['so capa de','~을 가장하여'],
+    ['en el marco de','~의 틀 안에서'],
+    ['en el seno de','~의 내부에서'],
+    ['a lo largo de','~에 걸쳐'],
+    ['a lo ancho de','~전역에 걸쳐'],
+    ['de ahí que','그런 이유로(접속법)'],
+    ['de modo que','그래서(결과)'],
+    ['de manera que','그런 식으로'],
+    ['de forma que','그렇게 해서'],
+    ['con tal de que','~하는 조건으로'],
+    ['a condición de que','~하는 조건 하에'],
+    ['siempre que','~하는 한'],
+    ['siempre y cuando','~하는 조건 하에'],
+    ['a no ser que','~이 아니라면'],
+    ['salvo que','~이 아닌 한'],
+    ['excepto que','~을 제외하고'],
+    ['a menos que','~이 아니라면'],
+    ['con la salvedad de que','~라는 단서와 함께'],
+    ['a sabiendas de que','~을 알면서도'],
+    ['pese a que','~에도 불구하고'],
+    ['a pesar de que','~에도 불구하고'],
+    ['aun cuando','비록 ~일지라도'],
+    ['si bien','비록 ~이지만'],
+    ['no obstante','그럼에도 불구하고'],
+    ['con todo','그럼에도'],
+    ['aun así','그렇다 해도'],
+    ['dicho esto','그렇긴 하지만'],
+    ['dicho de otro modo','다른 말로 하면'],
+    ['en otras palabras','다시 말해서'],
+    ['es decir','즉'],
+    ['o sea','즉, 다시 말해'],
+    ['a saber','즉, 다시 말하면(열거)'],
+    ['valga la redundancia','(중복이지만) 다시 말해'],
+    ['huelga decir que','말할 필요도 없이'],
+    ['qué duda cabe','의심의 여지 없이'],
+    ['sin lugar a dudas','의심할 여지 없이'],
+    ['a todas luces','명백히'],
+    ['a ciencia cierta','확실히'],
+    ['a grandes rasgos','대략적으로'],
+    ['en líneas generales','대체로'],
+    ['por regla general','일반적으로'],
+    ['por norma general','대체로'],
+    ['en su mayoría','대부분'],
+    ['en gran medida','상당 부분'],
+    ['en menor medida','더 적은 정도로'],
+    ['en última instancia','궁극적으로'],
+    ['en definitiva','결론적으로'],
+    ['en suma','요컨대'],
+    ['en resumidas cuentas','요약하자면'],
+    ['a fin de cuentas','결국'],
+    ['al fin y al cabo','결국'],
+    ['con el fin de','~하기 위해'],
+    ['con el propósito de','~할 목적으로'],
+    ['con vistas a','~을 목표로'],
+    ['en clave de','~의 관점에서'],
+    ['desde la óptica de','~의 관점에서'],
+    ['desde el punto de vista de','~의 관점에서 볼 때'],
+    ['a mi modo de ver','내가 보기에는'],
+    ['a mi juicio','내 판단으로는'],
+    ['a mi parecer','내 생각에는'],
+    ['cabe destacar que','특히 강조할 만한 것은'],
+    ['cabe señalar que','~라는 점을 지적할 만하다'],
+    ['conviene subrayar que','강조할 필요가 있는 것은'],
+    ['conviene precisar que','명확히 할 필요가 있는 것은'],
+    ['vale la pena mencionar que','언급할 가치가 있는 것은'],
+    ['no cabe duda de que','~라는 것은 의심의 여지가 없다'],
+    ['es de suponer que','~라고 추정된다'],
+    ['cabe la posibilidad de que','~할 가능성이 있다'],
+    ['llama la atención que','~라는 것이 눈에 띈다'],
+    ['resulta llamativo que','~라는 것이 두드러진다'],
+    ['sorprende que','~라는 것이 놀랍다'],
+    ['preocupa que','~라는 것이 우려된다'],
+    ['es lamentable que','~라는 것은 유감스럽다'],
+    ['es de esperar que','~하기를 기대한다'],
+    ['está por ver si','~인지는 두고 봐야 한다'],
+    ['queda por determinar si','~인지는 아직 정해지지 않았다'],
+    ['huelga añadir que','덧붙일 필요도 없이'],
+    ['por no hablar de','~은 말할 것도 없고'],
+    ['sin ir más lejos','다른 예를 들 것도 없이(바로)'],
+    ['a título ilustrativo','예시로서'],
+    ['a modo de ejemplo','예시로서'],
+    ['pongamos por caso','예를 들어보자면'],
+    ['valga como ejemplo','예로 들 만한 것은'],
+    ['llegados a este punto','이 시점에서'],
+    ['dicho lo cual','그렇게 말한 이상'],
+    ['hecha esta salvedad','이 단서를 두고'],
+    ['sentado esto','이를 전제로'],
+    ['partiendo de la base de que','~라는 전제에서 출발하여'],
+    ['en tanto en cuanto','~하는 한'],
+    ['mientras tanto','그 동안에'],
+    ['entretanto','그 사이에'],
+    ['acto seguido','그 즉시'],
+    ['de ahí en adelante','그 이후로'],
+    ['a partir de entonces','그때부터'],
+    ['desde entonces','그때 이후로'],
+    ['hasta la fecha','지금까지'],
+    ['a estas alturas','지금 이 시점에'],
+    ['llegado el momento','때가 되면'],
+    ['en su debido momento','적절한 때에'],
+    ['a bote pronto','즉흥적으로, 순간적으로'],
+    ['sobre la marcha','그때그때, 진행하면서'],
+    ['a grandes trazos','대략적으로'],
+  ],
+  "추상명사": [
+    ['índole','성격, 종류'],
+    ['pormenor','세부사항'],
+    ['matiz','뉘앙스'],
+    ['disyuntiva','딜레마'],
+    ['paradoja','역설'],
+    ['dicotomía','이분법'],
+    ['controversia','논란'],
+    ['polémica','논쟁'],
+    ['discrepancia','불일치'],
+    ['consenso','합의'],
+    ['unanimidad','만장일치'],
+    ['desacuerdo','불일치'],
+    ['malentendido','오해'],
+    ['equívoco','오해, 착오'],
+    ['ambigüedad','모호함'],
+    ['incertidumbre','불확실성'],
+    ['certeza','확실성'],
+    ['hipótesis','가설'],
+    ['premisa','전제'],
+    ['conjetura','추측'],
+    ['suposición','추정'],
+    ['presunción','추정, 가정'],
+    ['indicio','징후, 단서'],
+    ['vestigio','흔적'],
+    ['secuela','후유증, 결과'],
+    ['repercusión','파급효과'],
+    ['trascendencia','중대성'],
+    ['relevancia','중요성'],
+    ['envergadura','(사안의) 규모, 중요성'],
+    ['magnitud','규모'],
+    ['alcance','범위, 파급력'],
+    ['dimensión','차원, 규모'],
+    ['vertiente','측면, 국면'],
+    ['ámbito','영역, 분야'],
+    ['esfera','영역'],
+    ['tesitura','상황, 처지'],
+    ['disyunción','분리, 분기'],
+    ['encrucijada','기로, 갈림길'],
+    ['dilema','딜레마'],
+    ['salvedad','단서, 예외'],
+    ['excepción','예외'],
+    ['anomalía','이상, 변칙'],
+    ['desviación','편차, 이탈'],
+    ['distorsión','왜곡'],
+    ['manipulación','조작'],
+    ['injerencia','간섭'],
+    ['intromisión','참견, 개입'],
+    ['obstáculo','장애물'],
+    ['escollo','걸림돌'],
+    ['traba','방해, 걸림돌'],
+    ['impedimento','장애물'],
+    ['cortapisa','제약, 걸림돌'],
+    ['rémora','걸림돌, 방해요소'],
+    ['lastre','짐, 부담'],
+    ['carga','부담'],
+    ['desgaste','소모, 마모'],
+    ['agotamiento','고갈, 탈진'],
+    ['declive','쇠퇴'],
+    ['ocaso','쇠퇴, 황혼'],
+    ['auge','전성기, 호황'],
+    ['apogeo','전성기, 절정'],
+    ['cúspide','정점'],
+    ['umbral','문턱, 한계점'],
+    ['punto de inflexión','전환점'],
+    ['hito','이정표'],
+    ['hazaña','위업'],
+    ['logro','성취'],
+    ['legado','유산'],
+    ['herencia','유산'],
+    ['desenlace','결말'],
+    ['trasfondo','배경, 이면'],
+    ['entresijos','내막, 속사정'],
+    ['meollo','핵심'],
+    ['quid de la cuestión','핵심, 요점'],
+    ['esencia','본질'],
+    ['idiosincrasia','특유의 성질'],
+    ['peculiaridad','특이함'],
+    ['singularidad','독특함'],
+    ['rasgo','특징'],
+    ['atributo','속성'],
+    ['idoneidad','적합성'],
+    ['pertinencia','타당성, 관련성'],
+    ['congruencia','정합성, 일치성'],
+    ['coherencia','일관성'],
+    ['incongruencia','불일치, 모순'],
+    ['contradicción','모순'],
+    ['inconsistencia','비일관성'],
+    ['solidez argumentativa','논리적 견고함'],
+    ['debilidad argumentativa','논리적 취약함'],
+    ['falacia','오류(논리적)'],
+    ['sofisma','궤변'],
+    ['argucia','술책, 궤변'],
+    ['subterfugio','핑계, 술책'],
+    ['artimaña','술책'],
+    ['ardid','계략'],
+    ['desidia','나태, 태만'],
+    ['apatía','무관심'],
+    ['indiferencia','무관심'],
+    ['empatía','공감'],
+    ['resiliencia','회복력'],
+  ],
+};
+
+/* ---------------------------------------------------------
+   DATA: 6 practice articles (original texts, vocab marked **word**)
+--------------------------------------------------------- */
+const articles = [
+  {id:"economia", topic:"경제 · 국제정세", title:"El Estrecho de Ormuz agita los mercados a las puertas de la reunión del BCE",
+   meta:"Análisis de actualidad · 17 de julio de 2026",
+   paras:[
+    "Los mercados europeos han abierto la jornada de este jueves con un tono **dubitativo**, atrapados entre el alivio que supuso la moderación de la inflación mayorista estadounidense y la creciente tensión geopolítica en el Estrecho de Ormuz. El enfrentamiento entre Washington y Teherán mantiene el barril de petróleo Brent por encima de los 84 dólares, lo que **reaviva** el temor a nuevas presiones inflacionistas justo cuando los bancos centrales buscaban **margen** para pausar el endurecimiento monetario.",
+    "El IBEX 35 ha **cedido** ligeramente tras la apertura, mientras el Euríbor se mantiene **estable** en torno al 2,75%. Todas las miradas apuntan ya a la reunión del Banco Central Europeo del próximo 22 de julio: cualquier **matización** de sus miembros sobre los tipos de interés podría generar **volatilidad** en los bonos y las divisas.",
+    "En paralelo, el mercado laboral ofrece señales más **alentadoras**: la Seguridad Social ha superado los 22,5 millones de afiliados, un **hito** histórico, mientras el sindicato CCOO ha alcanzado un **preacuerdo** con Airbus que incluye una revisión salarial y nuevos compromisos en materia de teletrabajo."
+   ],
+   vocab:{
+     "dubitativo":"주저하는, 불확실한","reaviva":"다시 불붙이다 (reavivar)","margen":"여지, 폭","cedido":"물러나다, 하락하다 (ceder)","estable":"안정된","matización":"뉘앙스 있는 설명, 세부 조정","volatilidad":"변동성","alentadoras":"고무적인 (alentador)","hito":"이정표","preacuerdo":"잠정 합의"
+   }},
+  {id:"medioambiente", topic:"환경 · 기후변화", title:"Un verano letal: Greenpeace alerta de más de 6.000 muertes por calor en España",
+   meta:"Reportaje de actualidad · 17 de julio de 2026",
+   paras:[
+    "Según ha **denunciado** Greenpeace, más de 6.000 personas han fallecido este año en España a causa del calor y otros fenómenos meteorológicos **extremos**, una cifra que **evidencia** que la crisis climática ya no es una amenaza futura, sino una realidad que se paga con vidas humanas.",
+    "La organización ecologista, apoyándose en registros médicos independientes, reclama un **Pacto de Estado** que permita **prescindir** progresivamente de los combustibles fósiles y **gravar** con nuevos impuestos a las grandes petroleras, cuya actividad, según sostienen, ha **alimentado** directamente las condiciones que provocan estas olas de calor.",
+    "A escala europea, la situación no es menos preocupante: la última ola de calor de finales de junio dejó, según los datos de vigilancia epidemiológica, miles de muertes por encima de la media histórica. Los expertos **insisten** en que cada hectárea que no arde y cada golpe de calor que se evita gracias a una gestión responsable del territorio representa un beneficio **medible**, tanto en vidas como en costes sanitarios."
+   ],
+   vocab:{
+     "denunciado":"고발한, 규탄한 (denunciar)","extremos":"극단적인","evidencia":"명백히 보여주다 (evidenciar)","Pacto de Estado":"국가 협약","prescindir":"~없이 지내다, 배제하다","gravar":"세금을 부과하다","alimentado":"부추긴 (alimentar)","insisten":"강조하다, 고집하다 (insistir)","medible":"측정 가능한"
+   }},
+  {id:"tecnologia", topic:"과학기술 · 인공지능", title:"La ONU advierte: la inteligencia artificial avanza más rápido que las normas para regularla",
+   meta:"Análisis divulgativo · 17 de julio de 2026",
+   paras:[
+    "Un panel científico independiente de la ONU ha **constatado**, en un informe **preliminar** presentado esta semana, que la inteligencia artificial podría convertirse en una de las tecnologías más **transformadoras** de la historia reciente: ya es capaz de escribir código, analizar enormes volúmenes de datos y **actuar** con escasa supervisión humana.",
+    "El propio panel **matiza**, sin embargo, que la tecnología no es buena ni mala **por naturaleza**; su impacto dependerá de las decisiones que tomen ahora los gobiernos y las empresas. Mientras las capacidades del sistema se **aceleran**, las normas destinadas a garantizar un uso seguro avanzan con notable lentitud, lo que **suscita** una creciente preocupación entre los expertos en derechos humanos y democracia.",
+    "El informe **alimentará** el Diálogo Mundial sobre la Gobernanza de la Inteligencia Artificial, iniciado recientemente en Ginebra, donde los Estados debatirán fórmulas para que la innovación no vaya **en detrimento de** la igualdad ni del empleo. Los especialistas coinciden en que el reto **ineludible** de esta década será conciliar la velocidad del progreso técnico con la lentitud, inevitable, del consenso político."
+   ],
+   vocab:{
+     "constatado":"확인한 (constatar)","preliminar":"예비의, 사전의","transformadoras":"변혁적인","actuar":"(자율적으로) 행동하다","matiza":"뉘앙스를 더하다 (matizar)","por naturaleza":"본질적으로","aceleran":"가속화되다 (acelerar)","suscita":"불러일으키다 (suscitar)","alimentará":"(논의 등에) 자료를 제공할 것이다","en detrimento de":"~에 손해가 되도록","ineludible":"피할 수 없는"
+   }},
+  {id:"sociedad", topic:"사회 · 주거", title:"Con trabajo, pero sin casa: siete de cada diez jóvenes españoles siguen en el hogar familiar",
+   meta:"Reportaje social · 17 de julio de 2026",
+   paras:[
+    "Un dato reciente del Observatorio de Emancipación **confirma** lo que muchos jóvenes ya **sospechaban**: tener un empleo estable ha dejado de ser garantía suficiente para independizarse. En España, siete de cada diez jóvenes con trabajo continúan viviendo con sus padres, y la razón, según el informe, resulta tan simple como **contundente**: el alquiler medio **consume** ya el 98,7% del salario joven.",
+    "La **brecha** entre lo que se gana y lo que cuesta vivir se agrava en las grandes ciudades: el precio de una habitación ha subido un 8,3% en Barcelona en el último año, mientras que en el conjunto de Europa la tendencia, curiosamente, va **a la baja**.",
+    "Frente a este panorama, el nuevo Plan Estatal de Vivienda 2026-2030 **contempla** elevar el bono de alquiler joven de 250 a 300 euros mensuales para los menores de 35 años, además de reforzar la construcción de vivienda protegida. Con todo, los expertos **advierten** de que, mientras la vivienda pública apenas represente el 1,7% del parque total —frente al 9,3% de media europea—, será difícil **revertir** una tendencia que lleva más de una década consolidándose."
+   ],
+   vocab:{
+     "confirma":"확인하다 (confirmar)","sospechaban":"짐작하다, 의심하다 (sospechar)","contundente":"단호한, 명백한","consume":"소비하다 (consumir)","brecha":"격차","a la baja":"하락세로","contempla":"고려하다, 규정하다 (contemplar)","advierten":"경고하다 (advertir)","revertir":"반전시키다, 되돌리다"
+   }},
+  {id:"salud", topic:"보건 · 공중보건", title:"España estrena una agencia estatal para anticipar las próximas crisis sanitarias",
+   meta:"Análisis institucional · 17 de julio de 2026",
+   paras:[
+    "Tras la aprobación, el año pasado, de la ley que le da origen, España **da forma** en 2026 a la nueva Agencia Estatal de Salud Pública (AESAP), un organismo **autónomo** llamado a coordinar la vigilancia epidemiológica, la monitorización de riesgos y la respuesta ante amenazas sanitarias futuras.",
+    "El Ministerio de Sanidad **sostiene** que esta estructura permitirá **agilizar** la respuesta ante emergencias y actuar con mayor precisión **preventiva**, en un contexto marcado por retos como el cambio climático, la desigualdad social y la aparición de nuevas amenazas biológicas. La creación de la AESAP **se enmarca**, además, dentro de un proceso más amplio de modernización del sistema sanitario público.",
+    "En paralelo, algunas comunidades autónomas ya **reportan** avances **tangibles**: Madrid, por ejemplo, ha logrado reducir sus listas de espera sanitarias este año. No obstante, persisten retos de fondo, como el hecho de que uno de cada tres españoles lleve más de un año sin acudir al dentista, lo que **subraya** la importancia de reforzar también la prevención en el ámbito de la atención primaria."
+   ],
+   vocab:{
+     "da forma":"구체화하다","autónomo":"자율적인, 독립적인","sostiene":"주장하다 (sostener)","agilizar":"신속하게 하다","preventiva":"예방적인","se enmarca":"~의 틀 안에 있다 (enmarcarse)","reportan":"보고하다 (reportar)","tangibles":"가시적인, 확실한","subraya":"강조하다 (subrayar)"
+   }},
+  {id:"cultura", topic:"예술·문화 · 유산", title:"Récord de visitantes: el patrimonio español nunca había atraído a tanto público",
+   meta:"Reportaje cultural · 17 de julio de 2026",
+   paras:[
+    "Patrimonio Nacional ha **cerrado** el año pasado con una cifra histórica: más de siete millones de visitantes recorrieron sus palacios, monasterios y colecciones reales, un **hito** que confirma el creciente interés del público por el patrimonio histórico y artístico español.",
+    "Entre las novedades que explican este **repunte** destaca la Galería de las Colecciones Reales de Madrid, que **alberga** cerca de 155.000 obras de arte y se ha consolidado como uno de los grandes reclamos culturales de la capital desde su apertura. A ello se suman iniciativas como 'Cultura Orgullosa', un programa que **visibiliza** las prácticas artísticas LGTBIQ+ en los museos estatales.",
+    "El verano trae, además, celebraciones de gran **arraigo** popular: Valencia conmemora este año los 700 años de su fiesta del Corpus Christi con una exposición dedicada a esta tradición, mientras Mérida **acoge**, un año más, su histórico festival de teatro clásico. Estos eventos **evidencian** que el patrimonio, lejos de ser un asunto del pasado, sigue generando vínculos vivos con el presente."
+   ],
+   vocab:{
+     "cerrado":"(한 시기를) 마감한 (cerrar)","hito":"이정표","repunte":"반등, 증가","alberga":"소장하다, 보유하다 (albergar)","visibiliza":"가시화하다 (visibilizar)","arraigo":"뿌리 깊음, 전통","acoge":"개최하다, 맞이하다 (acoger)","evidencian":"분명히 보여주다 (evidenciar)"
+   }},
+];
+
+/* ---------------------------------------------------------
+   STATE
+--------------------------------------------------------- */
+let state = {
+  startDate: null,
+  vocabChecked: {},   // "week-word" -> true
+  notebook: [],       // {es, ko, source, addedAt}
+  quizStats: {}       // sourceKey -> {attempts, correct}
+};
+let currentArticleId = articles[0].id;
+let currentLookup = null; // {es, ko, source}
+
+async function loadState(){
+  try{
+    const s = await window.storage.get('settings');
+    if(s && s.value){ const parsed = JSON.parse(s.value); state.startDate = parsed.startDate || null; }
+  }catch(e){}
+  try{
+    const v = await window.storage.get('vocab-checked');
+    if(v && v.value) state.vocabChecked = JSON.parse(v.value);
+  }catch(e){}
+  try{
+    const n = await window.storage.get('notebook');
+    if(n && n.value) state.notebook = JSON.parse(n.value);
+  }catch(e){}
+  try{
+    const q = await window.storage.get('quiz-stats');
+    if(q && q.value) state.quizStats = JSON.parse(q.value);
+  }catch(e){}
+}
+async function saveQuizStats(){
+  try{ await window.storage.set('quiz-stats', JSON.stringify(state.quizStats)); }catch(e){}
+}
+async function saveSettings(){
+  try{ await window.storage.set('settings', JSON.stringify({startDate: state.startDate})); }catch(e){}
+}
+async function saveVocabChecked(){
+  try{ await window.storage.set('vocab-checked', JSON.stringify(state.vocabChecked)); }catch(e){}
+}
+async function saveNotebook(){
+  try{ await window.storage.set('notebook', JSON.stringify(state.notebook)); }catch(e){}
+}
+
+/* ---------------------------------------------------------
+   TABS
+--------------------------------------------------------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab === 'quiz' && document.getElementById('quiz-setup-view').style.display !== 'none'){
+      renderQuizSourceGrid();
+      renderQuizStatsStrip();
+    }
+    if(btn.dataset.tab === 'master'){
+      renderMasterList();
+    }
+  });
+});
+
+/* ---------------------------------------------------------
+   SCHEDULE RENDER + week computation
+--------------------------------------------------------- */
+function computeCurrentWeek(){
+  if(!state.startDate) return null;
+  const start = new Date(state.startDate + 'T00:00:00');
+  const now = new Date();
+  const diffDays = Math.floor((now - start)/(1000*60*60*24));
+  if(diffDays < 0) return 0;
+  const week = Math.floor(diffDays/7)+1;
+  return Math.min(week, 12);
+}
+
+function renderWeekBadge(){
+  const wk = computeCurrentWeek();
+  const label = document.getElementById('week-label');
+  const num = document.getElementById('week-number');
+  if(wk === null){ label.textContent = '시작일을 설정하세요 →'; num.textContent = 'W–'; }
+  else if(wk === 0){ label.textContent = '시작 예정'; num.textContent = 'W0'; }
+  else { label.textContent = '오늘은'; num.textContent = 'W'+wk; }
+}
+
+function renderSchedule(){
+  const container = document.getElementById('schedule-list');
+  container.innerHTML='';
+  const curWeek = computeCurrentWeek();
+  schedule.forEach(phaseObj=>{
+    const label = document.createElement('div');
+    label.className='phase-label';
+    label.textContent = phaseObj.phase;
+    container.appendChild(label);
+    phaseObj.weeks.forEach(w=>{
+      const row = document.createElement('div');
+      row.className = 'week-row' + (curWeek===w.w ? ' current':'');
+      row.innerHTML = `
+        <div class="week-num">${w.w}<span>SEMANA</span></div>
+        <div>
+          <p class="week-focus">${w.focus}</p>
+          <p class="week-routine">${w.routine}</p>
+          <span class="week-tag">${w.tag}</span>
+        </div>`;
+      container.appendChild(row);
+    });
+  });
+}
+
+document.getElementById('start-date-input').addEventListener('change', async (e)=>{
+  state.startDate = e.target.value;
+  await saveSettings();
+  renderWeekBadge();
+  renderSchedule();
+  renderVocab();
+});
+
+/* ---------------------------------------------------------
+   VOCAB TAB
+--------------------------------------------------------- */
+function currentVocabWeek(){
+  const wk = computeCurrentWeek();
+  if(!wk || wk<1) return 1;
+  return wk;
+}
+
+function renderVocab(){
+  const wk = currentVocabWeek();
+  const bank = vocabBank[wk] || vocabBank[1];
+  document.getElementById('vocab-week-title').textContent = `${wk}주차 어휘 · ${bank.theme}`;
+  const list = document.getElementById('vocab-list');
+  list.innerHTML='';
+  let doneCount=0;
+  bank.words.forEach(([es,ko,pos,ex])=>{
+    const key = wk+'-'+es;
+    const isDone = !!state.vocabChecked[key];
+    if(isDone) doneCount++;
+    const li = document.createElement('li');
+    li.className = 'vocab-item'+(isDone?' done':'');
+    li.innerHTML = `
+      <div class="vocab-check${isDone?' done':''}" data-key="${key}">${isDone?'✓':''}</div>
+      <div>
+        <span class="vocab-word">${es}</span><span class="vocab-pos">${pos}</span>
+        <div class="vocab-ko">${ko}</div>
+        <div class="vocab-ex">${ex}</div>
+      </div>`;
+    list.appendChild(li);
+  });
+  document.getElementById('vocab-progress-label').textContent = `${doneCount} / ${bank.words.length} 완료`;
+
+  list.querySelectorAll('.vocab-check').forEach(chk=>{
+    chk.addEventListener('click', async ()=>{
+      const key = chk.dataset.key;
+      state.vocabChecked[key] = !state.vocabChecked[key];
+      await saveVocabChecked();
+      renderVocab();
+    });
+  });
+}
+
+/* ---------------------------------------------------------
+   NEWS TAB
+--------------------------------------------------------- */
+function renderArticlePicker(){
+  const picker = document.getElementById('article-picker');
+  picker.innerHTML='';
+  articles.forEach(a=>{
+    const chip = document.createElement('button');
+    chip.className='article-chip'+(a.id===currentArticleId?' active':'');
+    chip.textContent = a.topic;
+    chip.addEventListener('click', ()=>{ currentArticleId=a.id; renderArticle(); renderArticlePicker(); closeLookup(); });
+    picker.appendChild(chip);
+  });
+}
+
+function escapeHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderArticle(){
+  const art = articles.find(a=>a.id===currentArticleId);
+  document.getElementById('article-title').textContent = art.title;
+  document.getElementById('article-meta').textContent = art.meta;
+  const body = document.getElementById('article-body');
+  body.innerHTML = art.paras.map(p=>{
+    const escaped = escapeHtml(p);
+    const withSpans = escaped.replace(/\*\*(.+?)\*\*/g, (m, word)=>{
+      return `<span class="vw" data-w="${word.toLowerCase()}">${word}</span>`;
+    });
+    return `<p>${withSpans}</p>`;
+  }).join('');
+
+  body.querySelectorAll('.vw').forEach(span=>{
+    span.addEventListener('click', ()=>{
+      const w = span.dataset.w;
+      const ko = art.vocab[w] || art.vocab[span.textContent] || '뜻 정보 없음';
+      openLookup(span.textContent, ko, art.topic);
+    });
+  });
+}
+
+function openLookup(es, ko, source){
+  currentLookup = {es, ko, source};
+  document.getElementById('lookup-word').textContent = es;
+  document.getElementById('lookup-pos').textContent = '';
+  document.getElementById('lookup-ko').textContent = ko;
+  const panel = document.getElementById('lookup-panel');
+  panel.classList.add('show');
+  const already = state.notebook.some(n=>n.es.toLowerCase()===es.toLowerCase());
+  document.getElementById('lookup-save').disabled = already;
+  document.getElementById('lookup-save').textContent = already ? '이미 저장됨' : '+ 내 단어장에 저장';
+}
+function closeLookup(){
+  document.getElementById('lookup-panel').classList.remove('show');
+  currentLookup = null;
+}
+document.getElementById('lookup-close').addEventListener('click', closeLookup);
+document.getElementById('lookup-save').addEventListener('click', async ()=>{
+  if(!currentLookup) return;
+  state.notebook.unshift({es: currentLookup.es, ko: currentLookup.ko, source: currentLookup.source, addedAt: new Date().toISOString().slice(0,10)});
+  await saveNotebook();
+  renderNotebook();
+  openLookup(currentLookup.es, currentLookup.ko, currentLookup.source);
+});
+
+/* ---------------------------------------------------------
+   NOTEBOOK TAB
+--------------------------------------------------------- */
+function renderNotebook(filter){
+  const body = document.getElementById('nb-body');
+  const empty = document.getElementById('nb-empty');
+  const list = (filter ? state.notebook.filter(n=> n.es.toLowerCase().includes(filter.toLowerCase()) || n.ko.includes(filter)) : state.notebook);
+  document.getElementById('nb-count').textContent = `${state.notebook.length}개 저장됨`;
+  body.innerHTML='';
+  if(list.length===0){ empty.style.display='block'; return; } else { empty.style.display='none'; }
+  list.forEach((n, idxInList)=>{
+    const realIdx = state.notebook.indexOf(n);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${n.es}</td>
+      <td>${n.ko}</td>
+      <td><span class="nb-src">${n.source}</span><br><span class="nb-src">${n.addedAt}</span></td>
+      <td><button class="nb-del" data-idx="${realIdx}">삭제</button></td>`;
+    body.appendChild(tr);
+  });
+  body.querySelectorAll('.nb-del').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const idx = parseInt(btn.dataset.idx,10);
+      state.notebook.splice(idx,1);
+      await saveNotebook();
+      renderNotebook(document.getElementById('nb-search').value);
+    });
+  });
+}
+document.getElementById('nb-search').addEventListener('input', (e)=> renderNotebook(e.target.value));
+document.getElementById('nb-add-btn').addEventListener('click', async ()=>{
+  const esInput = document.getElementById('nb-new-es');
+  const koInput = document.getElementById('nb-new-ko');
+  const es = esInput.value.trim(); const ko = koInput.value.trim();
+  if(!es || !ko) return;
+  state.notebook.unshift({es, ko, source:'직접 추가', addedAt: new Date().toISOString().slice(0,10)});
+  esInput.value=''; koInput.value='';
+  await saveNotebook();
+  renderNotebook();
+});
+
+/* ---------------------------------------------------------
+   QUIZ TAB
+--------------------------------------------------------- */
+const quizSources = [
+  {key:"week", label:"이번 주 어휘", desc:"오늘 기준 학습 주차 단어"},
+  {key:"allweeks", label:"12주 전체 어휘", desc:"1~12주 어휘 전체에서 랜덤"},
+  {key:"news", label:"오늘 뉴스 어휘", desc:"6개 뉴스 지문의 밑줄 단어"},
+  {key:"master", label:"1000 마스터 사전", desc:"10개 분야 전체 어휘에서 랜덤"},
+  {key:"notebook", label:"나의 단어장", desc:"내가 저장한 단어만"},
+];
+
+function masterPoolFlat(){
+  let pool=[];
+  Object.keys(masterVocab).forEach(cat=>{
+    masterVocab[cat].forEach(([es,ko])=>pool.push({es,ko}));
+  });
+  return pool;
+}
+
+function allWeeksPool(){
+  let pool=[];
+  Object.keys(vocabBank).forEach(wk=>{
+    vocabBank[wk].words.forEach(([es,ko])=>pool.push({es,ko}));
+  });
+  return pool;
+}
+function newsPool(){
+  let pool=[]; let seen=new Set();
+  articles.forEach(a=>{
+    Object.entries(a.vocab).forEach(([es,ko])=>{
+      const key = es.toLowerCase();
+      if(!seen.has(key)){ seen.add(key); pool.push({es,ko}); }
+    });
+  });
+  return pool;
+}
+function notebookPool(){
+  return state.notebook.map(n=>({es:n.es, ko:n.ko}));
+}
+function poolForSource(key){
+  if(key==="week"){
+    const wk = currentVocabWeek();
+    return (vocabBank[wk]||vocabBank[1]).words.map(([es,ko])=>({es,ko}));
+  }
+  if(key==="allweeks") return allWeeksPool();
+  if(key==="news") return newsPool();
+  if(key==="master") return masterPoolFlat();
+  if(key==="notebook") return notebookPool();
+  return [];
+}
+function fillerPool(){
+  return allWeeksPool().concat(newsPool()).concat(masterPoolFlat());
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+let quizState = null;
+
+function renderQuizStatsStrip(){
+  const strip = document.getElementById('quiz-stats-strip');
+  strip.innerHTML='';
+  quizSources.forEach(s=>{
+    const st = state.quizStats[s.key] || {attempts:0, correct:0};
+    const rate = st.attempts>0 ? Math.round((st.correct/st.attempts)*100) : null;
+    const div = document.createElement('div');
+    div.innerHTML = `<b>${rate===null?'–':rate+'%'}</b>${s.label} 누적 정답률`;
+    strip.appendChild(div);
+  });
+}
+
+function renderQuizSourceGrid(){
+  const grid = document.getElementById('quiz-source-grid');
+  grid.innerHTML='';
+  quizSources.forEach(s=>{
+    const pool = poolForSource(s.key);
+    const btn = document.createElement('div');
+    btn.className='quiz-source-btn';
+    btn.innerHTML = `<b>${s.label}</b><span>${s.desc} · ${pool.length}개 보유</span>`;
+    btn.style.opacity = pool.length < 2 ? '.45' : '1';
+    btn.addEventListener('click', ()=>{
+      if(pool.length < 2){ return; }
+      grid.querySelectorAll('.quiz-source-btn').forEach(b=>b.style.borderColor='');
+      btn.style.borderColor = 'var(--brick)';
+      quizState = {sourceKey:s.key};
+    });
+    grid.appendChild(btn);
+  });
+}
+
+function showQuizView(view){
+  document.getElementById('quiz-setup-view').style.display = view==='setup' ? '' : 'none';
+  document.getElementById('quiz-play-view').style.display = view==='play' ? '' : 'none';
+  document.getElementById('quiz-result-view').style.display = view==='result' ? '' : 'none';
+}
+
+document.getElementById('quiz-start-btn').addEventListener('click', ()=>{
+  if(!quizState || !quizState.sourceKey){
+    alert('먼저 위에서 범위를 하나 선택해주세요.');
+    return;
+  }
+  startQuiz(quizState.sourceKey, parseInt(document.getElementById('quiz-count-select').value,10));
+});
+
+function startQuiz(sourceKey, count){
+  const basePool = poolForSource(sourceKey);
+  if(basePool.length < 2){ alert('이 범위에는 문제를 만들 단어가 충분하지 않아요.'); return; }
+  const filler = fillerPool();
+  const chosen = shuffle(basePool).slice(0, Math.min(count, basePool.length));
+  const questions = chosen.map(item=>{
+    const wrongCandidates = shuffle(filler.filter(f=> f.es.toLowerCase()!==item.es.toLowerCase() && f.ko!==item.ko));
+    const wrongs = [];
+    const usedKo = new Set([item.ko]);
+    for(const c of wrongCandidates){
+      if(wrongs.length>=3) break;
+      if(usedKo.has(c.ko)) continue;
+      usedKo.add(c.ko); wrongs.push(c.ko);
+    }
+    const options = shuffle([item.ko, ...wrongs]);
+    return {es:item.es, ko:item.ko, options};
+  });
+  quizState = {sourceKey, questions, idx:0, score:0, missed:[]};
+  showQuizView('play');
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const q = quizState.questions[quizState.idx];
+  document.getElementById('quiz-progress').textContent = `${quizState.idx+1} / ${quizState.questions.length} 문제`;
+  document.getElementById('quiz-question').textContent = q.es;
+  const optsDiv = document.getElementById('quiz-options');
+  optsDiv.innerHTML='';
+  document.getElementById('quiz-next-btn').style.display='none';
+  q.options.forEach(opt=>{
+    const b = document.createElement('button');
+    b.className='quiz-opt';
+    b.textContent = opt;
+    b.addEventListener('click', ()=>onQuizAnswer(opt));
+    optsDiv.appendChild(b);
+  });
+}
+
+async function onQuizAnswer(selected){
+  const q = quizState.questions[quizState.idx];
+  const correct = selected === q.ko;
+  document.querySelectorAll('.quiz-opt').forEach(b=>{
+    b.classList.add('disabled');
+    if(b.textContent === q.ko) b.classList.add('correct');
+    else if(b.textContent === selected) b.classList.add('wrong');
+  });
+  if(correct) quizState.score++;
+  else quizState.missed.push({es:q.es, ko:q.ko});
+
+  if(!state.quizStats[quizState.sourceKey]) state.quizStats[quizState.sourceKey] = {attempts:0, correct:0};
+  state.quizStats[quizState.sourceKey].attempts++;
+  if(correct) state.quizStats[quizState.sourceKey].correct++;
+  await saveQuizStats();
+
+  if(quizState.idx < quizState.questions.length-1){
+    document.getElementById('quiz-next-btn').style.display='';
+  } else {
+    setTimeout(()=>finishQuiz(), 500);
+  }
+}
+
+document.getElementById('quiz-next-btn').addEventListener('click', ()=>{
+  quizState.idx++;
+  renderQuizQuestion();
+});
+
+function finishQuiz(){
+  const total = quizState.questions.length;
+  const score = quizState.score;
+  document.getElementById('quiz-result-score').textContent = `${score} / ${total}`;
+  const pct = Math.round((score/total)*100);
+  let msg = '완벽해요! 이 범위는 이제 자신 있게 시험장에서 쓸 수 있어요.';
+  if(pct<50) msg='아직 낯선 단어가 많아요. 오늘의 어휘 탭에서 한 번 더 복습해보세요.';
+  else if(pct<80) msg='꽤 잘했어요. 틀린 단어만 한 번 더 살펴보면 완벽할 것 같아요.';
+  document.getElementById('quiz-result-sub').textContent = `${pct}% 정답 · ${msg}`;
+  const missedDiv = document.getElementById('quiz-missed-list');
+  missedDiv.innerHTML='';
+  if(quizState.missed.length>0){
+    const label = document.createElement('p');
+    label.className='hint';
+    label.style.marginBottom='4px';
+    label.textContent = '다시 볼 단어:';
+    missedDiv.appendChild(label);
+    quizState.missed.forEach(m=>{
+      const row = document.createElement('div');
+      row.className='quiz-missed-item';
+      row.innerHTML = `<b>${m.es}</b><span>${m.ko}</span>`;
+      missedDiv.appendChild(row);
+    });
+  }
+  showQuizView('result');
+  renderQuizStatsStrip();
+}
+
+document.getElementById('quiz-quit-btn').addEventListener('click', ()=>{
+  showQuizView('setup');
+  renderQuizSourceGrid();
+  renderQuizStatsStrip();
+});
+document.getElementById('quiz-retry-btn').addEventListener('click', ()=>{
+  startQuiz(quizState.sourceKey, quizState.questions.length);
+});
+document.getElementById('quiz-newset-btn').addEventListener('click', ()=>{
+  showQuizView('setup');
+  renderQuizSourceGrid();
+  renderQuizStatsStrip();
+});
+
+/* ---------------------------------------------------------
+   MASTER DICTIONARY TAB
+--------------------------------------------------------- */
+let masterActiveCat = "전체";
+let masterSearchTerm = "";
+
+function renderMasterCatGrid(){
+  const grid = document.getElementById('master-cat-grid');
+  grid.innerHTML='';
+  const cats = ["전체", ...Object.keys(masterVocab)];
+  cats.forEach(cat=>{
+    const chip = document.createElement('button');
+    chip.className='master-cat-chip'+(cat===masterActiveCat?' active':'');
+    const count = cat==="전체" ? Object.values(masterVocab).reduce((s,a)=>s+a.length,0) : masterVocab[cat].length;
+    chip.textContent = `${cat} (${count})`;
+    chip.addEventListener('click', ()=>{
+      masterActiveCat = cat;
+      renderMasterCatGrid();
+      renderMasterList();
+    });
+    grid.appendChild(chip);
+  });
+}
+
+function renderMasterList(){
+  const listDiv = document.getElementById('master-list');
+  const countLabel = document.getElementById('master-count-label');
+  let entries = [];
+  if(masterActiveCat === "전체"){
+    Object.entries(masterVocab).forEach(([cat, words])=>{
+      words.forEach(([es,ko])=>entries.push({es,ko,cat}));
+    });
+  } else {
+    masterVocab[masterActiveCat].forEach(([es,ko])=>entries.push({es,ko,cat:masterActiveCat}));
+  }
+  if(masterSearchTerm.trim()){
+    const term = masterSearchTerm.trim().toLowerCase();
+    entries = entries.filter(e=> e.es.toLowerCase().includes(term) || e.ko.includes(term));
+  }
+  const shown = masterActiveCat==="전체" && !masterSearchTerm.trim() ? entries.slice(0,150) : entries.slice(0,400);
+  countLabel.textContent = masterActiveCat==="전체" && !masterSearchTerm.trim()
+    ? `총 1,000개 중 ${shown.length}개 표시 (분야를 고르거나 검색해서 더 좁혀보세요)`
+    : `${entries.length}개 일치 (최대 400개 표시)`;
+
+  listDiv.innerHTML='';
+  shown.forEach(item=>{
+    const already = state.notebook.some(n=>n.es.toLowerCase()===item.es.toLowerCase());
+    const row = document.createElement('div');
+    row.className='master-row';
+    row.innerHTML = `
+      <div>
+        <div class="master-row-word">${item.es}</div>
+        <div class="master-row-ko">${item.ko}</div>
+      </div>
+      <button class="master-save-btn" ${already?'disabled':''}>${already?'저장됨':'+ 단어장'}</button>`;
+    row.querySelector('.master-save-btn').addEventListener('click', async (e)=>{
+      state.notebook.unshift({es:item.es, ko:item.ko, source:`마스터 사전 · ${item.cat}`, addedAt: new Date().toISOString().slice(0,10)});
+      await saveNotebook();
+      renderNotebook();
+      e.target.textContent='저장됨';
+      e.target.disabled=true;
+    });
+    listDiv.appendChild(row);
+  });
+}
+
+document.getElementById('master-search').addEventListener('input', (e)=>{
+  masterSearchTerm = e.target.value;
+  renderMasterList();
+});
+
+/* ---------------------------------------------------------
+   INIT
+--------------------------------------------------------- */
+(async function init(){
+  await loadState();
+  if(state.startDate){ document.getElementById('start-date-input').value = state.startDate; }
+  renderWeekBadge();
+  renderSchedule();
+  renderVocab();
+  renderArticlePicker();
+  renderArticle();
+  renderNotebook();
+  renderQuizSourceGrid();
+  renderQuizStatsStrip();
+  showQuizView('setup');
+  renderMasterCatGrid();
+  renderMasterList();
+})();
+</script>
+</body>
+</html>
